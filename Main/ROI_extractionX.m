@@ -156,11 +156,7 @@ for i=1:numel(selectedValues)
         end
         
     end
-    app.ImageSelection.(selectedValues{i}).X_ROI = struct;
-    app.ImageSelection.(selectedValues{i}).X_ROI=X.(selectedValues{i});
-    
 end
-
 i
 %----------------------------------------------------------------------------------------
 
