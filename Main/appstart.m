@@ -18,6 +18,10 @@ if Test_Mode == true
     
     app.FolderSelection.Output_Path = 'D:\Studienarbeit\Output'; 
     app.OutputDataFolderEditField.Value = app.FolderSelection.Output_Path;
+    
+    app.FolderSelection.Output_Path = 'D:\Studienarbeit\ProgrammFolder'; 
+    app.OutputDataFolderEditField.Value = app.FolderSelection.Programm_Path;
+    
     ListFolders(app);
 end
 
