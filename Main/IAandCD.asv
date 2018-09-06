@@ -27,8 +27,7 @@ greyValue =mean(Img,2);
 %ImgAdj = imadjust(Img, [double(package_grayvalue)/255,1],[0 1]);
 greyCutoff = mean(greyValue);
 ImgAdj = imadjust(Img,[greyCutoff/255,1],[0 1]);
-SE = strel('rectangle',[3,10]);
-ImgAdj = imclose(ImgAdj,SE);
+
 greyValueAdj = mean(ImgAdj,2); 
 fig = figure('visible','off',...
     'Position',[500 300 500 700]);
@@ -47,8 +46,7 @@ fig = figure('visible','off',...
 end
             %Smooth GreyScale Plot
 %     %morphologie closing
-SE = strel('rectangle',10);
-ImgAdj = imclose(ImgAdj,SE);
+%     ROI_anode_bottom = imclose(ROI_anode_bottom,SE);
 %     %detect Harris Features and select 25 best
 %     points_anode_top = detectHarrisFeatures(ROI_anode_top,'FilterSize',5);
 %     points_anode_top = points_anode_top.selectStrongest(25).Location;
