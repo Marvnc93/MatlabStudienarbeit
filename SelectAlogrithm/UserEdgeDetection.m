@@ -1,11 +1,8 @@
-%Choose Number of Images per type
-%Types are XCathode XAnode YCathode YAnode
-%Saving of the different types
-%1 mat for each picture with the image and the points
-% -> easy to save and implement
-% -> needs identifier for Type
+%main Folder needs to be added to the Path
+%use clear if you want to use another mat file during runtime
 if exist('app','var') ==0
-    app = load('apptest_ROIX.mat','app');
+    [file,path] = uigetfile('*.mat');
+    app = load(fullfile(path,file),'app');
     app =app.app;
 end
 
@@ -16,7 +13,7 @@ global imgCounterText;
 global textNumberOfPictures;
 global fig;
 clear n;
-result={'UserXY Values','Image','Selected Type','X or Y','Cathode Anode'};
+result={'UserXY Values','Image','X or Y','Cathode or Anode'};
 fig=figure('visible','on',...
     'Position',[200 200 300 600]);
 
@@ -53,7 +50,7 @@ global numberOfPictures;
 global result;
 global imgCounterText;
 global textNumberOfPictures;
-global fig
+global fig;
 %use persistent for number of pictures
 %{listBox.Visible,numberOfPictures.Visible} = {'off','off'};
 listBox.Visible = 'off';
@@ -71,6 +68,7 @@ if n==1
 end
 if n==0
     close(fig);
+    save(strcat('D:\Studienarbeit\ProgrammFolder\ROIPoints\',int2str(randi([1,9999999],1,1)),'.mat'),'result');
 else
     %Get the list and the amount of Selected Folders
     listSelected = app.FolderSelection.InputFolders.Selected_Values;
@@ -89,7 +87,7 @@ else
     imshow(img);
     %Get the user Input
     [x,y] = getpts;
-    result = [result; [x,y],{img},{ROIXY},{ROICathodeAnode}];
+    result = [result; [x,y],{img},{ROIXY},{resultCA}];
 end
 end
 function [ROIXY,ROICathodeAnode,resultCA] = returnXYCathodeAnode()
