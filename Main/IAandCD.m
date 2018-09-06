@@ -18,37 +18,54 @@ for i=1:size(Directory,1)
     file = file{1}.result;
     rOIandUserPoints=[rOIandUserPoints;file(2:end,:)];
 end
-%Greyscale cutting
+%% Load img
 for i=1:length(rOIandUserPoints)
 Img = rOIandUserPoints{i,2};
-greyValue =mean(Img,2);
-%[row,col] = size(Img);
-%package_grayvalue = max(max(Img(:,col-50:col)));
-%ImgAdj = imadjust(Img, [double(package_grayvalue)/255,1],[0 1]);
+%% Grey Cutoff
+greyValue =mean(Img,1);
+%greyCutoff = mean(greyValue(end-50:end));
 greyCutoff = mean(greyValue);
 ImgAdj = imadjust(Img,[greyCutoff/255,1],[0 1]);
-SE = strel('rectangle',[3,10]);
-ImgAdj = imclose(ImgAdj,SE);
-greyValueAdj = mean(ImgAdj,2); 
+greyValueAdj = mean(ImgAdj,1);
+%% Morphologie closing
+ SE = strel('rectangle',[3,10]);
+ ImgAdj = imclose(ImgAdj,SE);
+%% ImgSharpen
+ImgAdj = imsharpen(ImgAdj);
+
+%% Find Harrison Features 
+pointsFound = detectHarrisFeatures(Img,'Filtersize',7);
+pointsFound = pointsFound.selectStrongest(15);
+pointsFoundAdj = detectHarrisFeatures(ImgAdj,'Filtersize',7);
+pointsFoundAdj = pointsFoundAdj.selectStrongest(15);
+%% Loop for Images
 fig = figure('visible','off',...
     'Position',[500 300 500 700]);
+            
             subplot(2,2,1)
             imshow(Img);
+            hold on;
+            plot(pointsFound.Location(:,1),pointsFound.Location(:,2),'rx');
+            
             title('Image without Adjustment');
             subplot(2,2,2)
+
             imshow(ImgAdj);
+            hold on;
+            plot(pointsFoundAdj.Location(:,1),pointsFoundAdj.Location(:,2),'gx');
+
             title('Image after Adjustment');
             subplot(2,2,[3 4]);
             plot(greyValue);
             hold on;
             title('Columnwise Greyscale');
             plot(greyValueAdj,'g');
+            
+            
             saveas(fig,strcat(path,filesep,'IAandCD\',rOIandUserPoints{i,3},rOIandUserPoints{i,4},int2str(i),'.png'));
 end
             %Smooth GreyScale Plot
 %     %morphologie closing
-SE = strel('rectangle',10);
-ImgAdj = imclose(ImgAdj,SE);
 %     %detect Harris Features and select 25 best
 %     points_anode_top = detectHarrisFeatures(ROI_anode_top,'FilterSize',5);
 %     points_anode_top = points_anode_top.selectStrongest(25).Location;
