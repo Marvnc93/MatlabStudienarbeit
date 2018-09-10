@@ -12,7 +12,7 @@ tubeWidth = 4;
 tresholdDivideY = 100;
 createFigures =false;
 imgCounter=0;
-stepsForFigures=25;
+stepsForFigures=10;
 % to iterate through struct
 %app.ImageSelection.(selectedValues{1}).X_Narrow;
 
@@ -138,9 +138,9 @@ for i=1:numel(selectedValues)
             %plot(pointsFoundY,meanGrayYSmooth(pointsFoundY),'x');
             hold off;
             subplot(3,4,9);
-            imshow(Y.(selectedValues{i}).leftCathodeROI{j});
-            subplot(3,4,10);
             imshow(Y.(selectedValues{i}).leftAnodeROI{j});
+            subplot(3,4,10);
+            imshow(Y.(selectedValues{i}).leftCathodeROI{j});
             subplot(3,4,11);
             imshow(Y.(selectedValues{i}).rightCathodeROI{j});
             subplot(3,4,12);
