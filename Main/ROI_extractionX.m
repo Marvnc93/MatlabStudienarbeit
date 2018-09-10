@@ -1,5 +1,5 @@
 %function [] = ROI_extraction(app)
-function[] = ROI_extraction()
+function[] = ROI_extractionX()
 %ROI_EXTRACTION Summary of this function goes here
 %   Detailed explanation goes here
 app = load('apptest.mat');
@@ -11,7 +11,7 @@ pointsFoundN=int64([]);
 pointsFoundB=int64([]);
 tubeWidth = 8;
 createFigures =false;
-stepsForFigures=10;
+stepsForFigures=50;
 %-----------------------------------------------------------------------------------------
 %For X_Narrow % X_Broad
 %% Struct Initiation
@@ -51,8 +51,8 @@ for i=1:numel(selectedValues)
     end
     %___________________________________________________________________________________________________
     %% Narrow Side
-    for j=1:size((app.ImageSelection.(selectedValues{1}).X_Narrow),1)
-        ImgN=imread(app.ImageSelection.(selectedValues{1}).X_Narrow(j,:));
+    for j=1:size((app.ImageSelection.(selectedValues{i}).X_Narrow),1)
+        ImgN=imread(app.ImageSelection.(selectedValues{i}).X_Narrow(j,:));
         meanGrayX=mean(ImgN);
         meanGrayXSmooth=transpose(smooth(meanGrayX,50));
         pointsFoundN=[];
@@ -103,8 +103,8 @@ for i=1:numel(selectedValues)
     %___________________________________________________________________________________________________
     %%  Broad
     
-    for j=1:size((app.ImageSelection.(selectedValues{1}).X_Broad),1)
-        ImgB=imread(app.ImageSelection.(selectedValues{1}).X_Broad(j,:));
+    for j=1:size((app.ImageSelection.(selectedValues{i}).X_Broad),1)
+        ImgB=imread(app.ImageSelection.(selectedValues{i}).X_Broad(j,:));
         meanGrayX=mean(ImgB);
         meanGrayXSmooth=transpose(smooth(meanGrayX,50));
         pointsFoundB=[];
@@ -156,8 +156,11 @@ for i=1:numel(selectedValues)
         end
         
     end
+    app.ImageSelection.(selectedValues{i}).X_ROI = X.(selectedValues{i});
+    
 end
-i
+
+end
 %----------------------------------------------------------------------------------------
 
 

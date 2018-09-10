@@ -1,5 +1,5 @@
 %function [] = ROI_extraction(app)
-function[] = ROI_extraction()
+function[] = ROI_extractionY()
 %ROI_EXTRACTION Summary of this function goes here
 %   Detailed explanation goes here
 app = load('apptest.mat');
@@ -149,8 +149,9 @@ for i=1:numel(selectedValues)
             %save(strcat(dirPathY,filesep,'ImagesToKeep.mat'),'imagesToKeepY');
         end
     end
+    app.ImageSelection.(selectedValues{i}).Y_ROI = Y.(selectedValues{i});
+end
 end
 
-end
 
 
