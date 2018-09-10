@@ -13,6 +13,10 @@ Directory = dir(pathROI);
 Directory=Directory(~ismember({Directory.name},{'.','..'}));
 directories={Directory.name};
 rOIandUserPoints = {};
+%% CONFIG
+algorithm = "SURF";
+numPoints = 15;
+%% LOAD ROI USER POINTS
 for i=1:size(Directory,1)
     file={load(fullfile(pathROI, directories{1,i}))};
     file = file{1}.result;
@@ -22,22 +26,53 @@ end
 for i=1:length(rOIandUserPoints)
 Img = rOIandUserPoints{i,2};
 %% Grey Cutoff
-greyValue =mean(Img,1);
+greyValue =mean(Img,2);
 %greyCutoff = mean(greyValue(end-50:end));
-greyCutoff = mean(greyValue);
-ImgAdj = imadjust(Img,[greyCutoff/255,1],[0 1]);
-greyValueAdj = mean(ImgAdj,1);
+greyCutOffValues = mean(greyValue)*1.8;
+ImgAdj = imadjust(Img,[greyCutOffValues/255,1],[0 1]);
+%ImgAdj = imadjust(ImgAdj);
+greyValueAdj = mean(ImgAdj,2);
 %% Morphologie closing
- SE = strel('rectangle',[3,10]);
+ SE = strel('rectangle',[5,10]);
  ImgAdj = imclose(ImgAdj,SE);
 %% ImgSharpen
 ImgAdj = imsharpen(ImgAdj);
 
 %% Find Harrison Features 
-pointsFound = detectHarrisFeatures(Img,'Filtersize',7);
-pointsFound = pointsFound.selectStrongest(15);
-pointsFoundAdj = detectHarrisFeatures(ImgAdj,'Filtersize',7);
-pointsFoundAdj = pointsFoundAdj.selectStrongest(15);
+if algorithm =="Harrison"
+    pointsFound = detectHarrisFeatures(Img,'Filtersize',7);
+    pointsFound = pointsFound.selectStrongest(numPoints);
+    pointsFoundAdj = detectHarrisFeatures(ImgAdj,'Filtersize',7);
+    pointsFoundAdj = pointsFoundAdj.selectStrongest(numPoints);
+    
+end
+
+%% Find SURF Features
+if algorithm =="SURF"
+    pointsFound = detectSURFFeatures(Img);
+    pointsFound = pointsFound.selectStrongest(numPoints);
+    pointsFoundAdj = detectSURFFeatures(ImgAdj);
+    pointsFoundAdj = pointsFoundAdj.selectStrongest(numPoints);
+    
+end
+
+%% Find FAST Features
+if algorithm == "FAST"
+    pointsFound = detectFASTFeatures(Img);
+    pointsFound = pointsFound.selectStrongest(numPoints);
+    pointsFoundAdj = detectFASTFeatures(ImgAdj);
+    pointsFoundAdj = pointsFoundAdj.selectStrongest(numPoints);
+    
+end
+%% Find BRISK Features
+if algorithm == "BRISK"
+    pointsFound = detectBRISKFeatures(Img);
+    pointsFound = pointsFound.selectStrongest(numPoints);
+    pointsFoundAdj = detectBRISKFeatures(ImgAdj);
+    pointsFoundAdj = pointsFoundAdj.selectStrongest(numPoints);
+    
+end
+
 %% Loop for Images
 fig = figure('visible','off',...
     'Position',[500 300 500 700]);
@@ -58,12 +93,13 @@ fig = figure('visible','off',...
             subplot(2,2,[3 4]);
             plot(greyValue);
             hold on;
-            title('Columnwise Greyscale');
+            title(rOIandUserPoints{i,4});
             plot(greyValueAdj,'g');
             
             
             saveas(fig,strcat(path,filesep,'IAandCD\',rOIandUserPoints{i,3},rOIandUserPoints{i,4},int2str(i),'.png'));
 end
+strcat(algorithm," Algorithm was used")
             %Smooth GreyScale Plot
 %     %morphologie closing
 %     %detect Harris Features and select 25 best
