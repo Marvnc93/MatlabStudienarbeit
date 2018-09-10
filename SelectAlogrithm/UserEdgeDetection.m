@@ -69,6 +69,7 @@ end
 if n==0
     close(fig);
     save(strcat('D:\Studienarbeit\ProgrammFolder\ROIPoints\',int2str(randi([1,9999999],1,1)),'.mat'),'result');
+    clear all;
 else
     %Get the list and the amount of Selected Folders
     listSelected = app.FolderSelection.InputFolders.Selected_Values;

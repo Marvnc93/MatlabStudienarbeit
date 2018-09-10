@@ -93,7 +93,7 @@ fig = figure('visible','off',...
             subplot(2,2,[3 4]);
             plot(greyValue);
             hold on;
-            title('Rowwise Greyscale');
+            title(rOIandUserPoints{i,4});
             plot(greyValueAdj,'g');
             
             
