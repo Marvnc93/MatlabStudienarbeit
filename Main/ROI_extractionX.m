@@ -11,7 +11,7 @@ pointsFoundN=int64([]);
 pointsFoundB=int64([]);
 tubeWidth = 8;
 createFigures =false;
-stepsForFigures=50;
+stepsForFigures=10;
 %-----------------------------------------------------------------------------------------
 %For X_Narrow % X_Broad
 %% Struct Initiation
@@ -72,9 +72,10 @@ for i=1:numel(selectedValues)
         if cathodeROIPosition <100
             cathodeROIPosition = 100;
         end
-        X.(selectedValues{i}).narrowCathodeROI = [X.(selectedValues{i}).narrowCathodeROI;{ImgN(:,cathodeROIPosition-99:cathodeROIPosition+100)},cathodeROIPosition];
-        X.(selectedValues{i}).narrowAnodeROI = [X.(selectedValues{i}).narrowAnodeROI;{ImgN(:,anodeROIPosition-99:anodeROIPosition+100)},anodeROIPosition];
-        if mod(j,stepsForFigures)==0 || j==1 && createFigures==true
+        %The 1 is added to signalize that the ROI are legitamate
+        X.(selectedValues{i}).narrowCathodeROI = [X.(selectedValues{i}).narrowCathodeROI;{ImgN(:,cathodeROIPosition-99:cathodeROIPosition+100)},cathodeROIPosition,1];
+        X.(selectedValues{i}).narrowAnodeROI = [X.(selectedValues{i}).narrowAnodeROI;{ImgN(:,anodeROIPosition-99:anodeROIPosition+100)},anodeROIPosition,1];
+        if mod(j,stepsForFigures)==0 && createFigures==true || j==1 && createFigures==true
             fig = figure('visible','off');
             subplot(3,2,[1,2])
             imshow(ImgN);
@@ -125,11 +126,11 @@ for i=1:numel(selectedValues)
         if cathodeROIPosition <100
             cathodeROIPosition = 100;
         end
-        X.(selectedValues{i}).broadCathodeROI = [X.(selectedValues{i}).broadCathodeROI;{ImgB(:,cathodeROIPosition-99:cathodeROIPosition+100)},cathodeROIPosition];
-        X.(selectedValues{i}).broadAnodeROI = [X.(selectedValues{i}).broadAnodeROI;{ImgB(:,anodeROIPosition-99:anodeROIPosition+100)},anodeROIPosition];
+        X.(selectedValues{i}).broadCathodeROI = [X.(selectedValues{i}).broadCathodeROI;{ImgB(:,cathodeROIPosition-99:cathodeROIPosition+100)},cathodeROIPosition,1];
+        X.(selectedValues{i}).broadAnodeROI = [X.(selectedValues{i}).broadAnodeROI;{ImgB(:,anodeROIPosition-99:anodeROIPosition+100)},anodeROIPosition,1];
         %___________________________________________________________________________________________________
         %% Plot
-        if mod(j,stepsForFigures)==0 || j==1 && createFigures==true
+        if mod(j,stepsForFigures)==0 && createFigures==true || j==1 && createFigures==true
             fig = figure('visible','off');
             subplot(3,2,[1,2])
             imshow(ImgB);
