@@ -52,7 +52,8 @@ for i=1:numel(selectedValues)
     %___________________________________________________________________________________________________
     %% Narrow Side
     for j=1:size((app.ImageSelection.(selectedValues{i}).X_Narrow),1)
-        ImgN=imread(app.ImageSelection.(selectedValues{i}).X_Narrow(j,:));
+        pathN=app.ImageSelection.(selectedValues{i}).X_Narrow(j,:)
+        ImgN=imread(pathN);
         meanGrayX=mean(ImgN);
         meanGrayXSmooth=transpose(smooth(meanGrayX,50));
         pointsFoundN=[];
@@ -73,8 +74,8 @@ for i=1:numel(selectedValues)
             cathodeROIPosition = 100;
         end
         %The 1 is added to signalize that the ROI are legitamate
-        X.(selectedValues{i}).narrowCathodeROI = [X.(selectedValues{i}).narrowCathodeROI;{ImgN(:,cathodeROIPosition-99:cathodeROIPosition+100)},cathodeROIPosition,1];
-        X.(selectedValues{i}).narrowAnodeROI = [X.(selectedValues{i}).narrowAnodeROI;{ImgN(:,anodeROIPosition-99:anodeROIPosition+100)},anodeROIPosition,1];
+        X.(selectedValues{i}).narrowCathodeROI = [X.(selectedValues{i}).narrowCathodeROI;{ImgN(:,cathodeROIPosition-99:cathodeROIPosition+100)},cathodeROIPosition,1,pathN];
+        X.(selectedValues{i}).narrowAnodeROI = [X.(selectedValues{i}).narrowAnodeROI;{ImgN(:,anodeROIPosition-99:anodeROIPosition+100)},anodeROIPosition,1,pathN];
         if mod(j,stepsForFigures)==0 && createFigures==true || j==1 && createFigures==true
             fig = figure('visible','off');
             subplot(3,2,[1,2])
@@ -105,7 +106,8 @@ for i=1:numel(selectedValues)
     %%  Broad
     
     for j=1:size((app.ImageSelection.(selectedValues{i}).X_Broad),1)
-        ImgB=imread(app.ImageSelection.(selectedValues{i}).X_Broad(j,:));
+        pathB=app.ImageSelection.(selectedValues{i}).X_Broad(j,:)
+        ImgB=imread(pathB);
         meanGrayX=mean(ImgB);
         meanGrayXSmooth=transpose(smooth(meanGrayX,50));
         pointsFoundB=[];
@@ -126,8 +128,8 @@ for i=1:numel(selectedValues)
         if cathodeROIPosition <100
             cathodeROIPosition = 100;
         end
-        X.(selectedValues{i}).broadCathodeROI = [X.(selectedValues{i}).broadCathodeROI;{ImgB(:,cathodeROIPosition-99:cathodeROIPosition+100)},cathodeROIPosition,1];
-        X.(selectedValues{i}).broadAnodeROI = [X.(selectedValues{i}).broadAnodeROI;{ImgB(:,anodeROIPosition-99:anodeROIPosition+100)},anodeROIPosition,1];
+        X.(selectedValues{i}).broadCathodeROI = [X.(selectedValues{i}).broadCathodeROI;{ImgB(:,cathodeROIPosition-99:cathodeROIPosition+100)},cathodeROIPosition,1,pathB];
+        X.(selectedValues{i}).broadAnodeROI = [X.(selectedValues{i}).broadAnodeROI;{ImgB(:,anodeROIPosition-99:anodeROIPosition+100)},anodeROIPosition,1,pathB];
         %___________________________________________________________________________________________________
         %% Plot
         if mod(j,stepsForFigures)==0 && createFigures==true || j==1 && createFigures==true
