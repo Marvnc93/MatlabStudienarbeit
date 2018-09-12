@@ -60,8 +60,8 @@ for o=1:size(algorithmCell,1)
         if structureElement{o}=="on"
             ses = structureElementShape{o};
             shape = ses{1,1};
-            size =ses{1,2};
-            SE = strel(shape,size);
+            len =ses{1,2};
+            SE = strel(shape,len);
             ImgAdj = imclose(ImgAdj,SE);
         end
         %% ImgSharpen
