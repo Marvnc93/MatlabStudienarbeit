@@ -1,47 +1,9 @@
-
-%Image Augmentation and Corner Detection
-%main Folder needs to be added to the Path
-%use clear if you want to use another mat file during runtime
-
-% if exist('app','var') ==0
-%     [file,path] = uigetfile('*.mat');
-%     app = load(fullfile(path,file),'app');
-%     app =app.app;
-% end
-path = 'D:\Studienarbeit\ProgrammFolder';
-pathROI = strcat(path, '\ROIPoints');%change to app....Program_Path\ROIPoints
-Directory = dir(pathROI);
-Directory=Directory(~ismember({Directory.name},{'.','..'}));
-directories={Directory.name};
-rOIWithWrongUserPoints={};
-rOIandUserPoints = {};
-%% CONFIG
-%algorithm = "SURF";
-pointRange=10;
-drawFigures=false;
-%% LOAD ROI USER POINTS
-for i=1:size(Directory,1)
-    file={load(fullfile(pathROI, directories{1,i}))};
-    file = file{1}.result;
-    rOIWithWrongUserPoints=[rOIWithWrongUserPoints;file(2:end,:)];
-    %%clean up files -> anode 15 inputs cathode 14
-end
-for i=1:size(rOIWithWrongUserPoints,1)
-    if rOIWithWrongUserPoints{i,4} =="Cathode"
-        if numel(rOIWithWrongUserPoints{i,1})==28
-            rOIandUserPoints =[rOIandUserPoints;rOIWithWrongUserPoints(i,:),14];
-        end
-    end
-    if rOIWithWrongUserPoints{i,4} =="Anode"
-        if numel(rOIWithWrongUserPoints{i,1})==30
-            rOIandUserPoints =[rOIandUserPoints;rOIWithWrongUserPoints(i,:),15];
-        end
-    end
-end
-%Need a function to create a matrix with all the different combinations
-%results can be saved in the resulting matrix
-%% Create Algorithm Cell
-[algorithmCell,greyCutoff,structureElement,structureElementShape,sharpen,algorithms] = CreateAlgorithmCell();
+%function Point_extractionX(app)
+function Point_extractionX()
+%POINT_EXTRACTIONX Summary of this function goes here
+%   Detailed explanation goes here
+app = load('apptest.mat');
+app =app.app;
 
 for o=1:size(algorithmCell,1)
     algorithm = algorithms{o};
@@ -131,20 +93,13 @@ for o=1:size(algorithmCell,1)
             plot(greyValueAdj,'g');
             
             
-            saveas(fig,strcat(path,filesep,'IAandCD\',int2str(i),rOIandUserPoints{i,3},rOIandUserPoints{i,4},'.png'));
+            saveas(fig,strcat(path,filesep,'PointsX\',int2str(i),rOIandUserPoints{i,3},rOIandUserPoints{i,4},'.png'));
         end
     end
-    [xa,xc,ya,yc]=ProcessScore(rOIandUserPoints);
-    algorithmCell{o,6} = xa;
-    algorithmCell{o,7} = xc;
-    algorithmCell{o,8} = ya;
-    algorithmCell{o,9} = yc;
     %algorithmCell{o,7} = CalculateScore(pointsFoundAdj.Location,rOIandUserPoints{i,1},pointRange);
 end
-strcat(algorithm," Algorithm was used")
-%Smooth GreyScale Plot
-%     %morphologie closing
-%     %detect Harris Features and select 25 best
-%     points_anode_top = detectHarrisFeatures(ROI_anode_top,'FilterSize',5);
-%     points_anode_top = points_anode_top.selectStrongest(25).Location;
-img=2;
+
+
+
+end
+
