@@ -52,7 +52,7 @@ for i=1:numel(selectedValues)
     %___________________________________________________________________________________________________
     %% Narrow Side
     for j=1:size((app.ImageSelection.(selectedValues{i}).X_Narrow),1)
-        pathN=app.ImageSelection.(selectedValues{i}).X_Narrow(j,:)
+        pathN=app.ImageSelection.(selectedValues{i}).X_Narrow(j,:);
         ImgN=imread(pathN);
         meanGrayX=mean(ImgN);
         meanGrayXSmooth=transpose(smooth(meanGrayX,50));
@@ -106,7 +106,7 @@ for i=1:numel(selectedValues)
     %%  Broad
     
     for j=1:size((app.ImageSelection.(selectedValues{i}).X_Broad),1)
-        pathB=app.ImageSelection.(selectedValues{i}).X_Broad(j,:)
+        pathB=app.ImageSelection.(selectedValues{i}).X_Broad(j,:);
         ImgB=imread(pathB);
         meanGrayX=mean(ImgB);
         meanGrayXSmooth=transpose(smooth(meanGrayX,50));
