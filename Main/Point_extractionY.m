@@ -28,7 +28,7 @@ for i=1:length(selectedValues)
         %% Loop for Images
         if drawFigures==true && mod(j,stepsForFigures)==0
             fig = figure('visible','off',...
-                'Position',[500 300 500 900]);
+                'Position',[500 300 900 500]);
             subplot(2,4,1)
             imshow(ImgLA);
             hold on;
@@ -48,17 +48,22 @@ for i=1:length(selectedValues)
             imshow(ImgRA);
             hold on;
             plot(pointsFoundRA.Location(:,1),pointsFoundRA.Location(:,2),'gx');
-            title('rightAnode');
-            subplot(2,4,[3 4]);
+            title('right Anode');
+            subplot(2,4,[5 8]);
             %TODE add path to YROI
-            A =imread(app.ImageSelection.(selectedValues{i}).X_ROI.narrowCathodeROI{j,4});
+            A =imread(app.ImageSelection.(selectedValues{i}).Y_ROI.leftCathodeROI{j,4});
+            A =imrotate(A,90);
             imshow(A);
             hold on;
-            plot(pointsFoundC.Location(:,1)+single(app.ImageSelection.(selectedValues{i}).X_ROI.narrowCathodeROI{j,2}-99),pointsFoundC.Location(:,2),'gx');
+            plot(pointsFoundLA.Location(:,1)+single(app.ImageSelection.(selectedValues{i}).Y_ROI.leftAnodeROI{j,2}-99),pointsFoundLA.Location(:,2),'gx');
             hold on;
-            plot(pointsFoundA.Location(:,1)+single(app.ImageSelection.(selectedValues{i}).X_ROI.narrowAnodeROI{j,2}-99),pointsFoundA.Location(:,2),'gx');
+            plot(pointsFoundLC.Location(:,1)+single(app.ImageSelection.(selectedValues{i}).Y_ROI.leftCathodeROI{j,2}-99),pointsFoundLC.Location(:,2),'gx');
+            hold on;
+            plot(pointsFoundRC.Location(:,1)+single(app.ImageSelection.(selectedValues{i}).Y_ROI.rightCathodeROI{j,2}-99),pointsFoundRC.Location(:,2),'gx');
+            hold on;
+            plot(pointsFoundRA.Location(:,1)+single(app.ImageSelection.(selectedValues{i}).Y_ROI.rightAnodeROI{j,2}-99),pointsFoundRA.Location(:,2),'gx');
             title('Full Picture');
-            saveas(fig,strcat('D:\Studienarbeit\ProgrammFolder\PointsX\Narrow\',int2str(i),filesep,int2str(j),'.png'));
+            saveas(fig,strcat('D:\Studienarbeit\ProgrammFolder\PointsY\',int2str(i),filesep,int2str(j),'.png'));
         end
     end
 end
