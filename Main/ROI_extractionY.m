@@ -41,7 +41,8 @@ for i=1:numel(selectedValues)
     end
     %% Loop over all images of a single Input Folder
     for j=1:size((app.ImageSelection.(selectedValues{i}).Y),1)
-        ImgY=imread(app.ImageSelection.(selectedValues{i}).Y(j,:));
+        path = app.ImageSelection.(selectedValues{i}).Y(j,:);
+        ImgY=imread(path);
         ImgY =imrotate(ImgY,90);
         meanGrayY = mean(ImgY);
         %Smoothing of the function with a moving average and the span of 50
@@ -103,16 +104,16 @@ for i=1:numel(selectedValues)
         if rOIcentroids(1) <101
             rOIcentroids(1)=100;
         end
-        Y.(selectedValues{i}).leftAnodeROI = [Y.(selectedValues{i}).leftAnodeROI;{ImgY(:,rOIcentroids(1)-99:rOIcentroids(1)+100)},rOIcentroids(1),useImage];
+        Y.(selectedValues{i}).leftAnodeROI = [Y.(selectedValues{i}).leftAnodeROI;{ImgY(:,rOIcentroids(1)-99:rOIcentroids(1)+100)},rOIcentroids(1),useImage,path];
         
         %Sometimes the second centroid is <100 pixel away from the edge
         if rOIcentroids(2) <101
             rOIcentroids(2)=100;
         end
-        Y.(selectedValues{i}).leftCathodeROI = [Y.(selectedValues{i}).leftCathodeROI;{ImgY(:,rOIcentroids(2)-99:rOIcentroids(2)+100)},rOIcentroids(2),useImage];
+        Y.(selectedValues{i}).leftCathodeROI = [Y.(selectedValues{i}).leftCathodeROI;{ImgY(:,rOIcentroids(2)-99:rOIcentroids(2)+100)},rOIcentroids(2),useImage,path];
         
-        Y.(selectedValues{i}).rightCathodeROI = [Y.(selectedValues{i}).rightCathodeROI;{ImgY(:,rOIcentroids(3)-99:rOIcentroids(3)+100)},rOIcentroids(3),useImage];
-        Y.(selectedValues{i}).rightAnodeROI = [Y.(selectedValues{i}).rightAnodeROI;{ImgY(:,rOIcentroids(4)-99:rOIcentroids(4)+100)},rOIcentroids(4),useImage];
+        Y.(selectedValues{i}).rightCathodeROI = [Y.(selectedValues{i}).rightCathodeROI;{ImgY(:,rOIcentroids(3)-99:rOIcentroids(3)+100)},rOIcentroids(3),useImage,path];
+        Y.(selectedValues{i}).rightAnodeROI = [Y.(selectedValues{i}).rightAnodeROI;{ImgY(:,rOIcentroids(4)-99:rOIcentroids(4)+100)},rOIcentroids(4),useImage,path];
         
         %this counter keeps track of all the images run through - important
         %to pick the right picture from Y.x
