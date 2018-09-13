@@ -12,7 +12,8 @@ settings=settings.settings;
 
 selectedValues=app.FolderSelection.InputFolders.Selected_Values;
 stepsForFigures =10;
-drawFigures = true;
+drawFigures = false;
+pointsFound = struct;
   %!!!!!!!!!!!!! A
 for i=1:length(selectedValues)
     for j=1:size((app.ImageSelection.(selectedValues{i}).X_ROI.narrowCathodeROI),1)
@@ -21,6 +22,9 @@ for i=1:length(selectedValues)
 
         pointsFoundC = GetPoints(ImgC,settings,14);
         pointsFoundA = GetPoints(ImgA,settings,15); 
+        
+        app.ImageSelection.(selectedValues{i}).X_ROI.narrowCathodeROI{j,5} = pointsFoundC.Location;
+        app.ImageSelection.(selectedValues{i}).X_ROI.narrowAnodeROI{j,5} = pointsFoundA.Location;
         %% Loop for Images
         if drawFigures==true && mod(j,stepsForFigures)==0
             fig = figure('visible','off',...
