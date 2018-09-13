@@ -9,7 +9,7 @@ if exist('app','var') ==0
 end
 selectedValues=app.FolderSelection.InputFolders.Selected_Values;
 drawFigures=true;
-stepsForFigures=100;
+stepsForFigures=10;
 for i=1:length(selectedValues)
     for j=1:length(app.ImageSelection.(selectedValues{i}).X_ROI.narrowCathodeROI)
         ROIc = app.ImageSelection.(selectedValues{i}).X_ROI.narrowCathodeROI;
@@ -20,9 +20,9 @@ for i=1:length(selectedValues)
         pointxa=ROIa{j,5}(:,1);
         pointya=ROIa{j,5}(:,2);
         %
-        yqc=min(pointyc):max(pointyc);
+        yqc=linspace(min(pointyc),max(pointyc),800);
         xqc=interp1(pointyc,pointxc,yqc,'spline');
-        yqa=min(pointya):max(pointya);
+        yqa=linspace(min(pointya),max(pointya),800);
         xqa=interp1(pointya,pointxa,yqa,'spline');
         %
         quotientc = floor(length(xqc)/(length(pointxc)-1));
@@ -38,8 +38,8 @@ for i=1:length(selectedValues)
                 interpolatedPointsc(k,1) = xqc(end);
                 interpolatedPointsc(k,2) = yqc(end);
             else
-                interpolatedPointsc(k,1) = xqc(quotientc*k);
-                interpolatedPointsc(k,2) = yqc(quotientc*k);
+                interpolatedPointsc(k,1) = xqc(quotientc*(k-1));
+                interpolatedPointsc(k,2) = yqc(quotientc*(k-1));
             end
         end
         for k=1:length(pointxa)
@@ -50,8 +50,8 @@ for i=1:length(selectedValues)
                 interpolatedPointsa(k,1) = xqa(end);
                 interpolatedPointsa(k,2) = yqa(end);
             else
-                interpolatedPointsa(k,1) = xqa(quotienta*k);
-                interpolatedPointsa(k,2) = yqa(quotienta*k);
+                interpolatedPointsa(k,1) = xqa(quotienta*(k-1));
+                interpolatedPointsa(k,2) = yqa(quotienta*(k-1));
             end
         end
         %plot(xqc,yqc,'-');
