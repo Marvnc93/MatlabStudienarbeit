@@ -5,6 +5,8 @@ function [] = appstart(app,Test_Mode)
 addpath([pwd filesep 'AppImages']);
 addpath([pwd filesep 'CellSelection']);
 addpath([pwd filesep 'ImageImport']);
+addpath([pwd filesep 'CornerDetection']);
+addpath([pwd filesep 'SelectAlgorithm']);
 
 imshow('AppImages/IWF Logo.png', 'Parent', app.IWF_Logo_1);
 imshow('AppImages/IWF Logo.png', 'Parent', app.IWF_Logo_2);

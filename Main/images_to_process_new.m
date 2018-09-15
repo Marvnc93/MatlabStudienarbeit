@@ -123,6 +123,6 @@ for o=1:length(structs_to_iterate)
     app.ImageSelection.(structs_to_iterate{o}).Y = all_files.files_Y_out;
     app.ImageSelection.(structs_to_iterate{o}).Z = all_files.files_Z_out;
 end
-
+save('apptest.mat','app');
 end 
 
