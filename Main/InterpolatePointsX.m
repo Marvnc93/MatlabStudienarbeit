@@ -59,7 +59,7 @@ for i=1:1%length(selectedValues)
         
         realDistancePointsc = [interpolatedPointsc(:,1)+single(app.ImageSelection.(selectedValues{i}).X_ROI.narrowCathodeROI{j,2}-99),interpolatedPointsc(:,2)];
         realDistancePointsa = [interpolatedPointsa(:,1)+single(app.ImageSelection.(selectedValues{i}).X_ROI.narrowAnodeROI{j,2}-99),interpolatedPointsa(:,2)];
-        CalcDistance(realDistancePointsc,realDistancePointsa,"X-Narrow");
+
         if drawFigures==true && mod(j,stepsForFigures)==0
             fig = figure('visible','off',...
                 'Position',[500 300 500 700]);
