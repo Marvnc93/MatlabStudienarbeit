@@ -14,14 +14,14 @@ selectedValues=app.FolderSelection.InputFolders.Selected_Values;
 stepsForFigures =10;
 drawFigures = false;
 pointsFound = struct;
-  %!!!!!!!!!!!!! A
+%!!!!!!!!!!!!! A
 for i=1:length(selectedValues)
     for j=1:size((app.ImageSelection.(selectedValues{i}).X_ROI.narrowCathodeROI),1)
         ImgC=app.ImageSelection.(selectedValues{i}).X_ROI.narrowCathodeROI{j,1};
         ImgA=app.ImageSelection.(selectedValues{i}).X_ROI.narrowAnodeROI{j,1};
-
+        
         pointsFoundC = GetPoints(ImgC,settings,14);
-        pointsFoundA = GetPoints(ImgA,settings,15); 
+        pointsFoundA = GetPoints(ImgA,settings,15);
         
         app.ImageSelection.(selectedValues{i}).X_ROI.narrowCathodeROI{j,5} = pointsFoundC.Location;
         app.ImageSelection.(selectedValues{i}).X_ROI.narrowAnodeROI{j,5} = pointsFoundA.Location;
@@ -55,9 +55,12 @@ for i=1:length(selectedValues)
     for j=1:size((app.ImageSelection.(selectedValues{i}).X_ROI.broadCathodeROI),1)
         ImgC=app.ImageSelection.(selectedValues{i}).X_ROI.broadCathodeROI{j,1};
         ImgA=app.ImageSelection.(selectedValues{i}).X_ROI.broadAnodeROI{j,1};
-
+        
         pointsFoundC = GetPoints(ImgC,settings,14);
-        pointsFoundA = GetPoints(ImgA,settings,15); 
+        pointsFoundA = GetPoints(ImgA,settings,15);
+        
+        app.ImageSelection.(selectedValues{i}).X_ROI.broadCathodeROI{j,5} = pointsFoundC.Location;
+        app.ImageSelection.(selectedValues{i}).X_ROI.broadAnodeROI{j,5} = pointsFoundA.Location;
         %% Loop for Images
         if drawFigures==true && mod(j,stepsForFigures)==0
             fig = figure('visible','off',...
@@ -84,6 +87,6 @@ for i=1:length(selectedValues)
         end
     end
 end
-    
+
 
 end
