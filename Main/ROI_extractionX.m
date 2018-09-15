@@ -1,9 +1,9 @@
-%function [] = ROI_extraction(app)
-function[] = ROI_extractionX()
+function [] = ROI_extraction(app)
+%function[] = ROI_extractionX()
 %ROI_EXTRACTION Summary of this function goes here
 %   Detailed explanation goes here
-app = load('apptest.mat');
-app =app.app;
+%app = load('apptest.mat');
+%app =app.app;
 %i=3;
 
 selectedValues=app.FolderSelection.InputFolders.Selected_Values;
