@@ -41,7 +41,7 @@ end
 %Need a function to create a matrix with all the different combinations
 %results can be saved in the resulting matrix
 %% Create Algorithm Cell
-[algorithmCell,greyCutoff,structureElement,structureElementShape,sharpen,algorithms] = CreateAlgorithmCell();
+[algorithmCell,greyCutoff,structureElement,structureElementShape,sharpen,algorithms,grouping] = CreateAlgorithmCell();
 
 for o=1:size(algorithmCell,1)
     algorithm = algorithms{o};
@@ -64,6 +64,12 @@ for o=1:size(algorithmCell,1)
             SE = strel(shape,len);
             ImgAdj = imclose(ImgAdj,SE);
         end
+        %% Apply Gaussfilter
+        if grouping=="Gauss"
+            H = fspecial('gaussian',5,2);
+            ImgAdj = imfilter(ImgAdj,H);
+        end
+        
         %% ImgSharpen
         if sharpen{o}=="on"
             ImgAdj = imsharpen(ImgAdj);
@@ -135,10 +141,10 @@ for o=1:size(algorithmCell,1)
         end
     end
     [xa,xc,ya,yc]=ProcessScore(rOIandUserPoints);
-    algorithmCell{o,6} = xa;
-    algorithmCell{o,7} = xc;
-    algorithmCell{o,8} = ya;
-    algorithmCell{o,9} = yc;
+    algorithmCell{o,7} = xa;
+    algorithmCell{o,8} = xc;
+    algorithmCell{o,9} = ya;
+    algorithmCell{o,10} = yc;
     %algorithmCell{o,7} = CalculateScore(pointsFoundAdj.Location,rOIandUserPoints{i,1},pointRange);
 end
 strcat(algorithm," Algorithm was used")
