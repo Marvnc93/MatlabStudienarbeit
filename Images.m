@@ -33,13 +33,13 @@
 % SE = strel('square',4);
 % ImgAdj = imerode(ImgAdj,SE);
 % pointsFound = detectHarrisFeatures(ImgAdj,'Filtersize',7);
-% pointsFound = pointsFound.selectStrongest(14);
+% pointsFound=GetAllPoints(pointsFound,14,12);
 % subplot(1,2,1)
 % imshow(I);
 % subplot(1,2,2)
 % imshow (ImgAdj);
 % hold on
-% plot(pointsFound.Location(:,1),pointsFound.Location(:,2),'gx')
+% plot(pointsFound(:,1),pointsFound(:,2),'gx')
 %% LUT
 % I =imread('rose.jpg');
 % Lut = [repmat(uint8([0]),1,120),uint8(1:4:256),repmat(uint8([255]),1,72)];
@@ -58,7 +58,7 @@
 % ImgAdj = imfilter(I,filt);
 % ImgAdj =imsubtract(I,ImgAdj);
 % pointsFound = detectHarrisFeatures(ImgAdj,'Filtersize',7);
-% pointsFound=GetCorrectPoints(pointsFound,14,12);
+% pointsFound=GetAllPoints(pointsFound,14,12);
 % subplot(1,2,1)
 % imshow(I);
 % subplot(1,2,2)
@@ -66,32 +66,63 @@
 % hold on
 % plot(pointsFound(:,1),pointsFound(:,2),'gx')
 %% All operations
+%trehsholding, grey value cutoff, gaussian smoothing, anisotropic diffusio
+%Sobel, smooth with laplacian, erode, dialete
 
+%Img1 = edge(crop,'Sobel','vertical');
 
 I =imread('corners.jpg');
 crop = imcrop(I,[60 60 100 100]);
 ha = tight_subplot(3,3,[0.001 0.00000000000000001],[.01 .01],[.03 .03]);
+%% Threshold
 axes(ha(1));
 imshow(crop);
-ylabel("test",'FontSize',12,'FontName','Arial','Units', 'Normalized', 'Position', [-0.025, 0.5, 0]);
+ylabel("Original",'FontSize',12,'FontName','Arial','Units', 'Normalized', 'Position', [-0.025, 0.5, 0]);
+%% Threshold
 axes(ha(2));
-imshow(crop);
+Img2=imbinarize(crop);
+imshow(Img2);
+ylabel("Thresholding",'FontSize',12,'FontName','Arial','Units', 'Normalized', 'Position', [-0.025, 0.5, 0]);
+%% GreyCutoff
 axes(ha(3));
-imshow(crop);
+cutoff = mean(mean(crop));
+Img3=imadjust(crop,[cutoff/255 1],[0 1]);
+imshow(Img3);
+ylabel("GrayCutoff",'FontSize',12,'FontName','Arial','Units', 'Normalized', 'Position', [-0.025, 0.5, 0]);
+%% Gausian Smoothing
 axes(ha(4));
-imshow(crop);
+Img4 =imgaussfilt(crop,2);
+imshow(Img4);
+ylabel("Gaussian Smoothing",'FontSize',12,'FontName','Arial','Units', 'Normalized', 'Position', [-0.025, 0.5, 0]);
+%% Anisotropic Diffusion
 axes(ha(5));
-imshow(crop);
+Img5 = imdiffusefilt(crop,'NumberOfIterations',7);
+imshow(Img5);
+ylabel("Anisotropic Diffusion",'FontSize',12,'FontName','Arial','Units', 'Normalized', 'Position', [-0.025, 0.5, 0]);
+%% Sobel
 axes(ha(6));
-imshow(crop);
+Img6=edge(crop,'Sobel','vertical');
+imshow(Img6);
+ylabel("Sobel",'FontSize',12,'FontName','Arial','Units', 'Normalized', 'Position', [-0.025, 0.5, 0])
+%%Sharpen with Laplacian
 axes(ha(7));
-imshow(crop);
+filt = fspecial('laplacian',0.5);
+Imgfilt = imfilter(crop,filt);
+Img7 =imsubtract(crop,Imgfilt);
+imshow(Img7);
+ylabel("Laplacian",'FontSize',12,'FontName','Arial','Units', 'Normalized', 'Position', [-0.025, 0.5, 0])
+%% Erosion
 axes(ha(8));
-imshow(crop);
-ylabel("test");
+se = strel('square',4);
+Img8= imerode(crop,se);
+imshow(Img8);
+ylabel("Erosion",'FontSize',12,'FontName','Arial','Units', 'Normalized', 'Position', [-0.025, 0.5, 0])
+%% Dilation
 axes(ha(9));
-imshow(crop);
-
+se = strel('square',4);
+Img9= imdilate(crop,se);
+imshow(Img9);
+ylabel("Dilation",'FontSize',12,'FontName','Arial','Units', 'Normalized', 'Position', [-0.025, 0.5, 0])
 
 
 
