@@ -17,7 +17,7 @@ rOIWithWrongUserPoints={};
 rOIandUserPoints = {};
 %% CONFIG
 %algorithm = "SURF";
-pointRange=10;
+pointRange=12;
 drawFigures=false;
 %% LOAD ROI USER POINTS
 for i=1:size(Directory,1)
