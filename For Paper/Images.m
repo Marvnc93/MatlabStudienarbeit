@@ -73,7 +73,7 @@
 
 I =imread('corners.jpg');
 crop = imcrop(I,[60 60 100 100]);
-ha = tight_subplot(3,3,[0.001 0.00000000000000001],[.01 .01],[.03 .03]);
+ha = tight_subplot(3,3,[0.001 0.001],[.01 .01],[.03 .03]);
 %% Threshold
 axes(ha(1));
 imshow(crop);
