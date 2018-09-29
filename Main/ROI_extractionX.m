@@ -1,10 +1,7 @@
-function [] = ROI_extraction(app)
-%function[] = ROI_extractionX()
-%ROI_EXTRACTION Summary of this function goes here
-%   Detailed explanation goes here
-%app = load('apptest.mat');
-%app =app.app;
-%i=3;
+% function [] = ROI_extraction(app)
+function[] = ROI_extractionX()
+app = load('apptest.mat');
+app =app.app;
 
 selectedValues=app.FolderSelection.InputFolders.Selected_Values;
 pointsFoundN=int64([]);
@@ -12,6 +9,7 @@ pointsFoundB=int64([]);
 tubeWidth = 8;
 createFigures =false;
 stepsForFigures=10;
+smoothSpan = 50;
 %-----------------------------------------------------------------------------------------
 %For X_Narrow % X_Broad
 %% Struct Initiation
@@ -55,7 +53,7 @@ for i=1:numel(selectedValues)
         pathN=app.ImageSelection.(selectedValues{i}).X_Narrow(j,:);
         ImgN=imread(pathN);
         meanGrayX=mean(ImgN);
-        meanGrayXSmooth=transpose(smooth(meanGrayX,50));
+        meanGrayXSmooth=transpose(smooth(meanGrayX,smoothSpan));
         pointsFoundN=[];
         for k=6:numel(meanGrayX)
             if meanGrayX(k)>meanGrayX(k-5)+tubeWidth/2 || meanGrayX(k)<meanGrayX(k-5)-tubeWidth/2
@@ -70,20 +68,24 @@ for i=1:numel(selectedValues)
         [maxValue ,maxIndex] = max(difference);
         cathodeROIPosition =  int64(mean(pointsFoundN(1:maxIndex-1)));
         anodeROIPosition = int64(mean(pointsFoundN(maxIndex: end)));
-        if cathodeROIPosition <100
-            cathodeROIPosition = 100;
+        if cathodeROIPosition <301
+            cathodeROIPosition = 301;
         end
         %The 1 is added to signalize that the ROI are legitamate
-        X.(selectedValues{i}).narrowCathodeROI = [X.(selectedValues{i}).narrowCathodeROI;{ImgN(:,cathodeROIPosition-99:cathodeROIPosition+100)},cathodeROIPosition,1,pathN];
-        X.(selectedValues{i}).narrowAnodeROI = [X.(selectedValues{i}).narrowAnodeROI;{ImgN(:,anodeROIPosition-99:anodeROIPosition+100)},anodeROIPosition,1,pathN];
+        X.(selectedValues{i}).narrowCathodeROI = [X.(selectedValues{i}).narrowCathodeROI;{ImgN(:,cathodeROIPosition-300:anodeROIPosition-150)},cathodeROIPosition,1,pathN];
+        X.(selectedValues{i}).narrowAnodeROI = [X.(selectedValues{i}).narrowAnodeROI;{ImgN(:,anodeROIPosition-150:anodeROIPosition+100)},anodeROIPosition,1,pathN];
         if mod(j,stepsForFigures)==0 && createFigures==true || j==1 && createFigures==true
-            fig = figure('visible','off');
+            fig = figure('visible','off',...
+                'position',[200 200 400 600]);
+
+            % imshow(crop);
+            % ylabel("Original",'FontSize',12,'FontName','LM ROMAN 12','Units', 'Normalized', 'Position', [-0.025, 0.5, 0],'FontWeight','bold');
             subplot(3,2,[1,2])
             imshow(ImgN);
             title('X-Ray Image Narrow Side');
             subplot(3,2,[3,4])
             %Smooth GreyScale Plot
-            plot(linspace(1,numel(meanGrayXSmooth),numel(meanGrayXSmooth)),meanGrayXSmooth);
+            plot(linspace(1,numel(meanGrayXSmooth),numel(meanGrayXSmooth)),meanGrayXSmooth,'k');
             title('Mean Gray Values');
             axis([0 inf 0 110]);
             hold on;
@@ -92,12 +94,13 @@ for i=1:numel(selectedValues)
             %Centroids from the K-Means
             %plot(centroids(1,:),meanGrayXSmooth(centroids(1,:)),'go');
             %All points detected
-            plot(pointsFoundN,meanGrayXSmooth(pointsFoundN),'x');
+            plot(pointsFoundN,meanGrayXSmooth(pointsFoundN),'g+');
             hold off;
             subplot(3,2,5);
             imshow(X.(selectedValues{i}).narrowCathodeROI{j,1});
             subplot(3,2,6);
             imshow(X.(selectedValues{i}).narrowAnodeROI{j,1});
+
             saveas(fig,strcat(dirPathX,filesep,'Narrow\',int2str(j),'.png'));
             %save(strcat(dirPathY,filesep,'ImagesToKeep.mat'),'imagesToKeepY');
         end
@@ -109,7 +112,7 @@ for i=1:numel(selectedValues)
         pathB=app.ImageSelection.(selectedValues{i}).X_Broad(j,:);
         ImgB=imread(pathB);
         meanGrayX=mean(ImgB);
-        meanGrayXSmooth=transpose(smooth(meanGrayX,50));
+        meanGrayXSmooth=transpose(smooth(meanGrayX,smoothSpan));
         pointsFoundB=[];
         for k=6:numel(meanGrayX)
             if meanGrayX(k)>meanGrayX(k-5)+tubeWidth/2 || meanGrayX(k)<meanGrayX(k-5)-tubeWidth/2
@@ -125,21 +128,22 @@ for i=1:numel(selectedValues)
         [maxValue ,maxIndex] = max(difference);
         cathodeROIPosition =  int64(mean(pointsFoundB(1:maxIndex-1)));
         anodeROIPosition = int64(mean(pointsFoundB(maxIndex: end)));
-        if cathodeROIPosition <100
-            cathodeROIPosition = 100;
+        if cathodeROIPosition <301
+            cathodeROIPosition = 301;
         end
-        X.(selectedValues{i}).broadCathodeROI = [X.(selectedValues{i}).broadCathodeROI;{ImgB(:,cathodeROIPosition-99:cathodeROIPosition+100)},cathodeROIPosition,1,pathB];
-        X.(selectedValues{i}).broadAnodeROI = [X.(selectedValues{i}).broadAnodeROI;{ImgB(:,anodeROIPosition-99:anodeROIPosition+100)},anodeROIPosition,1,pathB];
+        X.(selectedValues{i}).broadCathodeROI = [X.(selectedValues{i}).broadCathodeROI;{ImgB(:,cathodeROIPosition-300:anodeROIPosition-150)},cathodeROIPosition,1,pathB];
+        X.(selectedValues{i}).broadAnodeROI = [X.(selectedValues{i}).broadAnodeROI;{ImgB(:,anodeROIPosition-150:anodeROIPosition+100)},anodeROIPosition,1,pathB];
         %___________________________________________________________________________________________________
         %% Plot
         if mod(j,stepsForFigures)==0 && createFigures==true || j==1 && createFigures==true
-            fig = figure('visible','off');
+            fig = figure('visible','off',...
+                'position',[200 200 400 600]);
             subplot(3,2,[1,2])
             imshow(ImgB);
             title('X-Ray Image Broad Side');
             subplot(3,2,[3,4])
             %Smooth GreyScale Plot
-            plot(linspace(1,numel(meanGrayXSmooth),numel(meanGrayXSmooth)),meanGrayXSmooth);
+            plot(linspace(1,numel(meanGrayXSmooth),numel(meanGrayXSmooth)),meanGrayXSmooth,'k');
             title('Mean Gray Values');
             axis([0 inf 0 110]);
             hold on;
@@ -148,7 +152,7 @@ for i=1:numel(selectedValues)
             %Centroids from the K-Means
             %plot(centroids(1,:),meanGrayXSmooth(centroids(1,:)),'go');
             %All points detected
-            plot(pointsFoundB,meanGrayXSmooth(pointsFoundB),'x');
+            plot(pointsFoundB,meanGrayXSmooth(pointsFoundB),'g+');
             hold off;
             subplot(3,2,5);
             imshow(X.(selectedValues{i}).broadCathodeROI{j,1});
@@ -162,7 +166,7 @@ for i=1:numel(selectedValues)
     app.ImageSelection.(selectedValues{i}).X_ROI = X.(selectedValues{i});
     
 end
-
+close all;
 end
 %----------------------------------------------------------------------------------------
 

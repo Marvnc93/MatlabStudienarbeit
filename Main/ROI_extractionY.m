@@ -13,6 +13,7 @@ tresholdDivideY = 100;
 createFigures =false;
 imgCounter=0;
 stepsForFigures=10;
+distanceCenter=350;
 % to iterate through struct
 %app.ImageSelection.(selectedValues{1}).X_Narrow;
 
@@ -29,7 +30,7 @@ for i=1:numel(selectedValues)
 end
 %% Loop over the selected Input Folders and create the Output Folders
 for i=1:numel(selectedValues)
-    %for i=2:2
+%for i=2:2
     dirPathY = strcat(app.FolderSelection.Output_Path,filesep,selectedValues{i},'\YROIFigures');
     if createFigures==true
         if exist(dirPathY)==0
@@ -95,24 +96,22 @@ for i=1:numel(selectedValues)
             useImage=0;
             %continue;
         end
-        if rOIcentroids(3)-rOIcentroids(2)<250
+        if rOIcentroids(3)-rOIcentroids(2)<distanceCenter
             %imagesToKeepY =[imagesToKeepY;{app.ImageSelection.(selectedValues{i}).Y(j,:),0}];
             useImage=0;
             %continue;
         end
         %Sometimes the first centroid is <100 pixel away from the edge
-        if rOIcentroids(1) <101
+        if rOIcentroids(1) <100
             rOIcentroids(1)=100;
         end
-        Y.(selectedValues{i}).leftAnodeROI = [Y.(selectedValues{i}).leftAnodeROI;{ImgY(:,rOIcentroids(1)-99:rOIcentroids(1)+100)},rOIcentroids(1),useImage,path];
-        
         %Sometimes the second centroid is <100 pixel away from the edge
-        if rOIcentroids(2) <101
+        if rOIcentroids(2) <100
             rOIcentroids(2)=100;
         end
-        Y.(selectedValues{i}).leftCathodeROI = [Y.(selectedValues{i}).leftCathodeROI;{ImgY(:,rOIcentroids(2)-99:rOIcentroids(2)+100)},rOIcentroids(2),useImage,path];
-        
-        Y.(selectedValues{i}).rightCathodeROI = [Y.(selectedValues{i}).rightCathodeROI;{ImgY(:,rOIcentroids(3)-99:rOIcentroids(3)+100)},rOIcentroids(3),useImage,path];
+        Y.(selectedValues{i}).leftAnodeROI = [Y.(selectedValues{i}).leftAnodeROI;{ImgY(:,rOIcentroids(1)-99:rOIcentroids(1)+100)},rOIcentroids(1),useImage,path];
+        Y.(selectedValues{i}).leftCathodeROI = [Y.(selectedValues{i}).leftCathodeROI;{ImgY(:,rOIcentroids(1)+100:rOIcentroids(2)+100)},rOIcentroids(2),useImage,path];
+        Y.(selectedValues{i}).rightCathodeROI = [Y.(selectedValues{i}).rightCathodeROI;{ImgY(:,rOIcentroids(3)-distanceCenter+100:rOIcentroids(3)+100)},rOIcentroids(3),useImage,path];
         Y.(selectedValues{i}).rightAnodeROI = [Y.(selectedValues{i}).rightAnodeROI;{ImgY(:,rOIcentroids(4)-99:rOIcentroids(4)+100)},rOIcentroids(4),useImage,path];
         
         %this counter keeps track of all the images run through - important
@@ -120,23 +119,27 @@ for i=1:numel(selectedValues)
         imgCounter = imgCounter+1;
         %% Create the figures
         %Later to show figures
-        if mod(j,stepsForFigures)==0 || j==1 && createFigures==true
+        if mod(j,stepsForFigures)==0 && createFigures==true
             fig = figure('visible','off');
             subplot(3,4,[1,4])
             imshow(ImgY);
             title(strcat('X-Ray Image Used:',int2str(useImage)));
             subplot(3,4,[5,8])
-            %Smooth GreyScale Plot
-            plot(linspace(1,numel(meanGrayYSmooth),numel(meanGrayYSmooth)),meanGrayYSmooth);
-            title('Mean Gray Values');
-            axis([0 inf 0 110]);
+            %All points detected
+            %             plot(pointsFoundY,meanGrayYSmooth(pointsFoundY),'g+');
             hold on;
+            %                         Centroids from the K-Means
+            plot(centroids(1,:),meanGrayYSmooth(centroids(1,:)),'ro');
+            %Smooth GreyScale Plot
+            plot(linspace(1,numel(meanGrayYSmooth),numel(meanGrayYSmooth)),meanGrayYSmooth,'k');
+            title('Mean Gray Values');
+            axis([0 inf 0 120]);
             %Raw GreyScale Plot
             %plot(linspace(1,numel(meanGrayY),numel(meanGrayY)),meanGrayY,'k');
+            
             %Centroids from the K-Means
-            plot(centroids(1,:),meanGrayYSmooth(centroids(1,:)),'go');
-            %All points detected
-            %plot(pointsFoundY,meanGrayYSmooth(pointsFoundY),'x');
+            %plot(centroids(1,:),meanGrayYSmooth(centroids(1,:)),'ro');
+            
             hold off;
             subplot(3,4,9);
             imshow(Y.(selectedValues{i}).leftAnodeROI{j});
@@ -152,4 +155,5 @@ for i=1:numel(selectedValues)
     end
     app.ImageSelection.(selectedValues{i}).Y_ROI = Y.(selectedValues{i});
 end
+close all;
 end
