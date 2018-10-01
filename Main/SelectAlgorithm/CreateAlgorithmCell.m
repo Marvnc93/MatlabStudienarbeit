@@ -1,35 +1,86 @@
-function [cell,gc,se,ses,sh,alg,grp] = CreateAlgorithmCell()
+function cell = CreateAlgorithmCell()
 
-cell ={};
-counter=1;
-greyCutoff ={"on","off"};
-structureElement = {"on","off"};
-structureElementShape = {{'rectangle',[2,2]},{'rectangle',[3,3]}};%,{'rectangle',[4,4]},{'rectangle',[5,5]},{'rectangle',[5,10]}};
-algorithm = {"Harrison","ShiTomasi"};%,"SURF","BRISK"};
-sharpen = {"on","off"};
-grouping ={'Gauss','off'};
+cell ={"preprocessing","preprocessingMode","imageSmoothen","imageSmoothenMode","GaussFilter","Anisoiter",...
+    "imageSharpen","binarize","binarizeMode","structure","structureMode","structureShape","algorithm","algorithmFilterSize"};
+counter=2;
 
-for i=1:numel(greyCutoff)
-    for j=1:numel(structureElement)
-        for k=1:numel(structureElementShape)
-            for m=1:numel(sharpen)
-                for n=1:numel(algorithm)
-                    for o=1:numel(grouping)
-                    cell(counter,:) = [greyCutoff(i),structureElement(j),structureElementShape(k),sharpen(m),algorithm(n),grouping(o)];
-                    counter = counter+1;
+preprocessing = {"off","on"};
+%Reduced after first results
+%preprocessingMode = {"Otsu", "Mean", "Quartile"};
+preprocessingMode = {"Mean"};
+imageSmoothen = {"off","on"};
+imageSmoothenMode = {"Gauﬂ","Anisotropic"};
+%First Value filter Size, Second Value sigma
+GaussFilter = {{7 2},{5 2}};
+Anisoiter = {5,15};
+
+imageSharpen = {"off","Laplace"};
+
+binarize = {"off","on"};
+%Reduced after first tests
+%binarizeMode = {"Thresholding","Sobel","EarlySobel"};
+binarizeMode={"EarlySobel"};
+
+structure = {"off","on"};
+structureMode = {"open","close"};
+structureShape = {{'rectangle',[3,1]},{'rectangle',[1,3]}};
+
+
+algorithm = {"Harrison"};%,"ShiTomasi"};%,"SURF","BRISK"};
+algorithmSize = {5,7,9};
+
+
+for i=1:numel(preprocessing)
+    for j=1:numel(preprocessingMode)
+        for k=1:numel(imageSmoothen)
+            for m=1:numel(imageSmoothenMode)
+                for n=1:numel(imageSharpen)
+                    for o=1:numel(binarize)
+                        for p=1:numel(binarizeMode)
+                            for q=1:numel(structure)
+                                for r=1:numel(structureMode)
+                                    for s=1:numel(structureShape)
+                                        for t = 1:numel(algorithm)
+                                            for u = 1:numel(algorithmSize)
+                                            %Remove unecesarry rows
+                                            if imageSmoothen{k}=="on"
+                                                for m1=1:numel(GaussFilter)
+                                                    for m2=1:numel(Anisoiter)
+                                                        
+                                                        cell(counter,:) = [preprocessing(i),preprocessingMode(j),...
+                                                            imageSmoothen(k),imageSmoothenMode(m),GaussFilter(m1),Anisoiter(m2)...
+                                                            imageSharpen(n),...
+                                                            binarize(o),binarizeMode(p),...
+                                                            structure(q),structureMode(r),structureShape(s),...
+                                                            algorithm(t),algorithmSize(u)];
+                                                        counter = counter+1;
+                                                    end
+                                                end
+                                            else
+                                                cell(counter,:) = [preprocessing(i),preprocessingMode(j),...
+                                                    imageSmoothen(k),{""},{""},{""}...
+                                                    imageSharpen(n),...
+                                                    binarize(o),binarizeMode(p),...
+                                                    structure(q),structureMode(r),structureShape(s),...
+                                                    algorithm(t),algorithmSize(u)];
+                                                
+                                                counter = counter+1;
+                                            end
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
                     end
-                
+                    
+                end
             end
         end
     end
 end
 
-gc=cell(:,1);
-se=cell(:,2);
-ses=cell(:,3);
-sh=cell(:,4);
-alg=cell(:,5);
-grp =cell(:,6);
+
 
 end
 
