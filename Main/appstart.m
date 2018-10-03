@@ -28,10 +28,10 @@ if Test_Mode == true
 end
 
 % Fill struct for the case no user prefs are selected
-app.ImageSelection.ImportSettings.xMinLength = ceil(app.MinimalelectrodelengthSlider.Value);
-app.ImageSelection.ImportSettings.xDistToMiddle =  ceil(app.DistancefrommiddlepictureSlider.Value);
-app.ImageSelection.ImportSettings.yMinLength =   ceil(app.MInmalelectrodelengthSlider.Value);
-app.ImageSelection.ImportSettings.yDistToEdge =  ceil(app.MinimaldistancetoedgeSlider.Value);
+app.ImageSelection.ImportSettings.xMinLength = ceil(app.MinimalelectrodelengthpxSlider.Value);
+app.ImageSelection.ImportSettings.xDistToMiddle =  ceil(app.DistancefromcornerimagesSlider.Value);
+app.ImageSelection.ImportSettings.yMinLength =   ceil(app.MInmalelectrodelengthpxSlider.Value);
+app.ImageSelection.ImportSettings.yDistToEdge =  ceil(app.MinimaldistancetoedgepxSlider.Value);
 app.ImageSelection.ImportSettings.zAmount =  ceil(app.NumerofPicturesSlider.Value);
 
 end
