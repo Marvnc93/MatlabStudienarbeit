@@ -27,9 +27,11 @@
 % ImgAdj =imadjust(ImgAdj);
 % S= transpose(fspecial('sobel'));
 % G = fspecial('gaussian',7,2);
-% ImgAdj = imfilter(ImgAdj,S);
-% ImgAdj = imdiffusefilt(ImgAdj,'NumberOfIterations',3);
+% %ImgAdj = imfilter(ImgAdj,S);
+% ImgAdj = imbinarize(ImgAdj);
+% %ImgAdj = imdiffusefilt(ImgAdj,'NumberOfIterations',3);
 % ImgAdj = imfilter(ImgAdj,G);
+% 
 % SE = strel('square',4);
 % ImgAdj = imerode(ImgAdj,SE);
 % pointsFound = detectHarrisFeatures(ImgAdj,'Filtersize',7);
@@ -74,21 +76,21 @@
 I =imread('corners.jpg');
 crop = imcrop(I,[60 60 100 100]);
 ha = tight_subplot(3,3,[0.001 0.001],[.01 .01],[.03 .03]);
-%% Threshold
+%% Orignial
 axes(ha(1));
 imshow(crop);
 ylabel("Original",'FontSize',12,'FontName','LM ROMAN 12','Units', 'Normalized', 'Position', [-0.025, 0.5, 0],'FontWeight','bold');
-%% Threshold
-axes(ha(2));
-Img2=imbinarize(crop);
-imshow(Img2);
-ylabel("Thresholding",'FontSize',12,'FontName','LM ROMAN 12','Units', 'Normalized', 'Position', [-0.025, 0.5, 0],'FontWeight','bold');
 %% GreyCutoff
-axes(ha(3));
+axes(ha(2));
 cutoff = mean(mean(crop));
-Img3=imadjust(crop,[cutoff/255 1],[0 1]);
+Img2=imadjust(crop,[cutoff/255 1],[0 1]);
+imshow(Img2);
+ylabel("Grey Cutoff",'FontSize',12,'FontName','LM ROMAN 12','Units', 'Normalized', 'Position', [-0.025, 0.5, 0],'FontWeight','bold');
+%% Threshold
+axes(ha(3));
+Img3=imbinarize(crop);
 imshow(Img3);
-ylabel("GrayCutoff",'FontSize',12,'FontName','LM ROMAN 12','Units', 'Normalized', 'Position', [-0.025, 0.5, 0],'FontWeight','bold');
+ylabel("Thresholding",'FontSize',12,'FontName','LM ROMAN 12','Units', 'Normalized', 'Position', [-0.025, 0.5, 0],'FontWeight','bold');
 %% Gausian Smoothing
 axes(ha(4));
 Img4 =imgaussfilt(crop,2);
@@ -103,27 +105,27 @@ ylabel("Anisotropic Diffusion",'FontSize',12,'FontName','LM ROMAN 12','Units', '
 axes(ha(6));
 Img6=edge(crop,'Sobel','vertical');
 imshow(Img6);
-ylabel("Sobel",'FontSize',12,'FontName','LM ROMAN 12','Units', 'Normalized', 'Position', [-0.025, 0.5, 0],'FontWeight','bold')
+ylabel("Sobel Filter",'FontSize',12,'FontName','LM ROMAN 12','Units', 'Normalized', 'Position', [-0.025, 0.5, 0],'FontWeight','bold')
 %%Sharpen with Laplacian
 axes(ha(7));
-filt = fspecial('laplacian',0.5);
+filt = fspecial('laplacian',0.25);
 Imgfilt = imfilter(crop,filt);
 Img7 =imsubtract(crop,Imgfilt);
 imshow(Img7);
-ylabel("Laplacian",'FontSize',12,'FontName','LM ROMAN 12','Units', 'Normalized', 'Position', [-0.025, 0.5, 0],'FontWeight','bold')
+ylabel("Laplacian Sharpen",'FontSize',12,'FontName','LM ROMAN 12','Units', 'Normalized', 'Position', [-0.025, 0.5, 0],'FontWeight','bold')
 %% Erosion
 axes(ha(8));
-se = strel('rectangle',[2 5]);
+se = strel('rectangle',[4 1]);
 Img8= imclose(crop,se);
 imshow(Img8);
-ylabel("Erosion",'FontSize',12,'FontName','LM ROMAN 12','Units', 'Normalized', 'Position', [-0.025, 0.5, 0],'FontWeight','bold')
+ylabel("Closing",'FontSize',12,'FontName','LM ROMAN 12','Units', 'Normalized', 'Position', [-0.025, 0.5, 0],'FontWeight','bold')
 %% Dilation
 axes(ha(9));
-se = strel('rectangle',[2 5]);
+se = strel('rectangle',[4 1]);
 %Img9= imdilate(crop,se);
 Img9 = imopen(crop,se);
 imshow(Img9);
-ylabel("Dilation",'FontSize',12,'FontName','LM ROMAN 12','Units', 'Normalized', 'Position', [-0.025, 0.5, 0],'FontWeight','bold')
+ylabel("Opening",'FontSize',12,'FontName','LM ROMAN 12','Units', 'Normalized', 'Position', [-0.025, 0.5, 0],'FontWeight','bold')
 
 
 
