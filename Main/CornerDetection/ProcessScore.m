@@ -1,4 +1,4 @@
-function [xa,xc,ya,yc] = ProcessScore(rOI)
+function [xa,xc,ya,yc] = ProcessScore(rOI,column)
 %PROCESSSCORE Summary of this function goes here
 %   Detailed explanation goes here
 struc = struct;
@@ -8,13 +8,13 @@ struc.yaa=[];
 struc.yca=[];
 for i=1:size(rOI,1)
     if rOI{i,3}=="Y_ROI" && rOI{i,4}=="Cathode"
-        struc.yca = [struc.yca;rOI{i,[5 6]}];
+        struc.yca = [struc.yca;rOI{i,[5 column]}];
     elseif rOI{i,3}=="Y_ROI" && rOI{i,4}=="Anode"
-        struc.yaa = [struc.yaa;rOI{i,[5 6]}];
+        struc.yaa = [struc.yaa;rOI{i,[5 column]}];
     elseif rOI{i,3}=="X_ROI" && rOI{i,4}=="Cathode"
-        struc.xca = [struc.xca;rOI{i,[5 6]}];
+        struc.xca = [struc.xca;rOI{i,[5 column]}];
     elseif rOI{i,3}=="X_ROI" && rOI{i,4}=="Anode"
-        struc.xaa = [struc.xaa;rOI{i,[5 6]}];
+        struc.xaa = [struc.xaa;rOI{i,[5 column]}];
     end
 end
 fields =fieldnames(struc);
