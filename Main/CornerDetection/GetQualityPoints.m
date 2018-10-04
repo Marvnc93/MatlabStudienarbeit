@@ -2,7 +2,10 @@ function out = GetQualityPoints(Img,detectionFilterSize,quality)
 
 points = detectHarrisFeatures(Img,'Filtersize',detectionFilterSize,'MinQuality', quality);
 StrongPoints = points.selectStrongest(50).Location;
-StrongPoints(:,3) = kmeans(StrongPoints,15);
+if numel(StrongPoints)==0
+    out =[];
+else
+StrongPoints(:,3) = kmeans(StrongPoints,length(StrongPoints));
 result=[];
 tempx=[];
 tempy=[];
@@ -19,11 +22,13 @@ for i=1:15
     tempx =[];
     tempy=[];
 end
-fig = figure;
-imshow(Img);
-hold on;
-%plot(StrongPoints(:,1),StrongPoints(:,2),'gx');
-plot(result(:,1),result(:,2),'gx');
+out=result;
+end
+% fig = figure;
+% imshow(Img);
+% hold on;
+% %plot(StrongPoints(:,1),StrongPoints(:,2),'gx');
+% plot(result(:,1),result(:,2),'gx');
 
 end
 
