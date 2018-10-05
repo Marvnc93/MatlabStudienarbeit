@@ -1,30 +1,38 @@
-function pointsFound = GetPoints(Img,settings,numPoints)
-        greyCutoff = settings{1};
-        structureElement = settings{2};
-        structureElementShape=settings{3};
-        sharpen = settings{4};
-        algorithm = settings{5};
+function pointsFound = GetPoints(Img,Settings,minDist)
+
         
 
         %% Preprocessing
-        Img = handlePreprocessing(algorithmCell,o,Img);
+        Img = handlePreprocessing(Settings,1,Img);
         
         %% Early Sobel
-        Img = handleEarlySobel(algorithmCell,o,Img);
+        Img = handleEarlySobel(Settings,1,Img);
         
         %% ImageSmoothing
-        Img = handleSmoothing(algorithmCell,o,Img);
+        Img = handleSmoothing(Settings,1,Img);
         
         %% ImageSharpen
-        Img = handleSharpen(algorithmCell,o,Img);
+        Img = handleSharpen(Settings,1,Img);
         
         %% Binarize
-        Img = handleBinarize(algorithmCell,o,Img);
+        Img = handleBinarize(Settings,1,Img);
         
         %% Structural Operations        
-        Img = handleStructurals(algorithmCell,o,Img);
+        Img = handleStructurals(Settings,1,Img);
         
         %% CornerDetection 
-        allPoints = detectHarrisFeatures(Img,'Filtersize',7);
-        pointsFound = GetAllPoints(allPoints,numPoints,10);
+        FilterSize = Settings{9};
+        allPoints = detectHarrisFeatures(Img,'Filtersize',FilterSize);
+        
+        %%Point Method
+        switch Settings{10}
+            case "Freq"
+                pointsFound = GetPointsFromFreq(Img,allPoints,minDist);
+            case "Quality"
+                pointsFound = GetQualityPoints(Img,FilterSize,0.045);
+            case "Force"
+                pointsFound = GetAllPoints(allPoints,15,minDist);
+            otherwise
+                "Error"
+        end
     end

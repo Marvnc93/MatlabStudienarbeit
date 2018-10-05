@@ -1,4 +1,4 @@
-function pointsOut = GetPointsFromFreq(Img,pointsIn,range,loopIter)
+function pointsOut = GetPointsFromFreq(Img,pointsIn,range)
 %GETPOINTSFROMFREQ Summary of this function goes here
 %   Detailed explanation goes here
 

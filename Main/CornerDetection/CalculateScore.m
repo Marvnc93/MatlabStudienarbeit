@@ -3,23 +3,27 @@ function score = CalculateScore(pointsFound,userPoints,pointRange)
 %   Detailed explanation goes here
 
 %Sort Array Rows by second column
-pointsFound=sortrows(pointsFound,2);
-userPoints = sortrows(userPoints,2);
-
-score=0;
-Result = [];
-for i=1:size(userPoints,1)
-    for j=1:size(pointsFound,1)
-        Result(i,j)=calculateDistance(pointsFound(j,:),userPoints(i,:));
+if numel(pointsFound)==0
+    score=0;
+else
+    pointsFound=sortrows(pointsFound,2);
+    userPoints = sortrows(userPoints,2);
+    
+    score=0;
+    Result = [];
+    for i=1:size(userPoints,1)
+        for j=1:size(pointsFound,1)
+            Result(i,j)=calculateDistance(pointsFound(j,:),userPoints(i,:));
+        end
     end
-end
-for k=1:j
-    [M,I] = min(Result(1:j,k));
-    Result(i+1,k) = M;
-    if M<=pointRange
-        score=score+1;
-        for m=1:j
-            Result(I,m)=999;
+    for k=1:j
+        [M,I] = min(Result(1:j,k));
+        Result(i+1,k) = M;
+        if M<=pointRange
+            score=score+1;
+            for m=1:j
+                Result(I,m)=999;
+            end
         end
     end
 end

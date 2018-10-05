@@ -5,12 +5,12 @@ StrongPoints = points.selectStrongest(50).Location;
 if numel(StrongPoints)==0
     out =[];
 else
-StrongPoints(:,3) = kmeans(StrongPoints,length(StrongPoints));
+StrongPoints(:,3) = kmeans(StrongPoints,size(StrongPoints,1));
 result=[];
 tempx=[];
 tempy=[];
 for i=1:15
-    for j = 1:length(StrongPoints)
+    for j = 1:size(StrongPoints,1)
         if StrongPoints(j,3)==i
             tempx = [tempx;StrongPoints(j,1)];
             tempy = [tempy;StrongPoints(j,2)];

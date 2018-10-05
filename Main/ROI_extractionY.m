@@ -109,10 +109,10 @@ for i=1:numel(selectedValues)
         if rOIcentroids(2) <100
             rOIcentroids(2)=100;
         end
-        Y.(selectedValues{i}).leftAnodeROI = [Y.(selectedValues{i}).leftAnodeROI;{ImgY(:,rOIcentroids(1)-99:rOIcentroids(1)+100)},rOIcentroids(1),useImage,path];
-        Y.(selectedValues{i}).leftCathodeROI = [Y.(selectedValues{i}).leftCathodeROI;{ImgY(:,rOIcentroids(1)+100:rOIcentroids(2)+100)},rOIcentroids(2),useImage,path];
-        Y.(selectedValues{i}).rightCathodeROI = [Y.(selectedValues{i}).rightCathodeROI;{ImgY(:,rOIcentroids(3)-distanceCenter+100:rOIcentroids(3)+100)},rOIcentroids(3),useImage,path];
-        Y.(selectedValues{i}).rightAnodeROI = [Y.(selectedValues{i}).rightAnodeROI;{ImgY(:,rOIcentroids(4)-99:rOIcentroids(4)+100)},rOIcentroids(4),useImage,path];
+        Y.(selectedValues{i}).leftAnodeROI = [Y.(selectedValues{i}).leftAnodeROI;{ImgY(:,rOIcentroids(1)-99:rOIcentroids(1)+100)},rOIcentroids(1)-99,useImage,path];
+        Y.(selectedValues{i}).leftCathodeROI = [Y.(selectedValues{i}).leftCathodeROI;{ImgY(:,rOIcentroids(1)+100:rOIcentroids(2)+100)},rOIcentroids(1)+100,useImage,path];
+        Y.(selectedValues{i}).rightCathodeROI = [Y.(selectedValues{i}).rightCathodeROI;{ImgY(:,rOIcentroids(3)-distanceCenter+100:rOIcentroids(3)+100)},rOIcentroids(3)-distanceCenter+100,useImage,path];
+        Y.(selectedValues{i}).rightAnodeROI = [Y.(selectedValues{i}).rightAnodeROI;{ImgY(:,rOIcentroids(4)-99:rOIcentroids(4)+100)},rOIcentroids(4)-99,useImage,path];
         
         %this counter keeps track of all the images run through - important
         %to pick the right picture from Y.x
