@@ -1,7 +1,7 @@
 function cell = CreateAlgorithmCell()
 
 cell ={"preprocessing","preprocessingMode","imageSmoothen","imageSmoothenMode","GaussFilter","Anisoiter",...
-    "imageSharpen","algorithm","algorithmFilterSize"};
+    "imageSharpen","algorithm","algorithmFilterSize","LaplaceFactor","minDist","quality"};
 %,"binarize","binarizeMode","structure","structureMode","structureShape"
 counter=2;
 
@@ -16,10 +16,10 @@ imageSmoothen = {"off","on"};
 imageSmoothenMode = {"Gauﬂ","Anisotropic"};
 %First Value filter Size, Second Value sigma
 GaussFilter = {[7 2],[5 2]};
-Anisoiter = {5,15};
+Anisoiter = {5};
 
 imageSharpen = {"off","Laplace"};
-
+LaplaceFactor = {0,0.5,1};
 %Reduced after first run
 %binarize = {"off","on"};
 %binarizeMode={"EarlySobel"};
@@ -33,9 +33,13 @@ imageSharpen = {"off","Laplace"};
 
 
 algorithm = {"Harrison"};%,"ShiTomasi"};%,"SURF","BRISK"};
-algorithmSize = {9,11};
+algorithmSize = {9};
 %Changed after first run
-%algorithmSize = {5,7,9};
+%algorithmSize = {5,7,9}; 11 is worse
+
+minDist ={8,10,12};
+
+quality = {0.2,0.4};
 
 
 for i=1:numel(preprocessing)
@@ -47,13 +51,21 @@ for i=1:numel(preprocessing)
                         for u = 1:numel(algorithmSize)
                             for m1=1:numel(GaussFilter)
                                 for m2=1:numel(Anisoiter)
-                                    
-                                    cell(counter,:) = [preprocessing(i),preprocessingMode(j),...
-                                        imageSmoothen(k),imageSmoothenMode(m),GaussFilter(m1),Anisoiter(m2)...
-                                        imageSharpen(n),...
-                                        algorithm(t),algorithmSize(u)];
-                                    counter = counter+1;
-                                    
+                                    for o=1:numel(LaplaceFactor)
+                                        for a =1:numel(minDist)
+                                            for b=1:numel(quality)
+                                                
+                                                cell(counter,:) = [preprocessing(i),preprocessingMode(j),...
+                                                    imageSmoothen(k),imageSmoothenMode(m),GaussFilter(m1),Anisoiter(m2)...
+                                                    imageSharpen(n),...
+                                                    algorithm(t),algorithmSize(u),...
+                                                    LaplaceFactor(o),...
+                                                    minDist(a),quality(b)];
+                                                counter = counter+1;
+                                                
+                                            end
+                                        end
+                                    end
                                 end
                             end
                         end
@@ -63,6 +75,7 @@ for i=1:numel(preprocessing)
         end
     end
 end
+
 
 
 
