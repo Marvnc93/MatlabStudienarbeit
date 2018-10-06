@@ -66,7 +66,7 @@ if Side =="Broad"
         plot(pointsFoundA(:,1),pointsFoundA(:,2),'gx');
         title('Anode');
         subplot(2,2,[3 4]);
-        A =imread(app.ImageSelection.(selectedValues{i}).X_ROI.broadCath odeROI{j,4});
+        A =imread(app.ImageSelection.(selectedValues{i}).X_ROI.broadCathodeROI{j,4});
         imshow(A);
         hold on;
         plot(pointsFoundC(:,1)+single(app.ImageSelection.(selectedValues{i}).X_ROI.broadCathodeROI{j,2}-300),pointsFoundC(:,2),'gx');

@@ -39,6 +39,9 @@ if Side =="Left"
             title('Full Picture');
             saveas(fig,strcat('D:\Studienarbeit\ProgrammFolder\PointsY\Left\',int2str(i),filesep,int2str(j),'.png'));
         end
+    else
+        app.Distances.(selectedValues{i}).PointsY(j+1,1) = {''};
+        app.Distances.(selectedValues{i}).PointsY(j+1,2) = {''};
     end
 end
 if Side =="Right"
@@ -49,8 +52,8 @@ if Side =="Right"
         pointsFoundA = GetPoints(ImgA,Settings.YAnode,15);  
         pointsCReal = [pointsFoundC(:,1)+single(app.ImageSelection.(selectedValues{i}).Y_ROI.rightCathodeROI{j,2}),pointsFoundC(:,2)];
         pointsAReal = [pointsFoundA(:,1)+single(app.ImageSelection.(selectedValues{i}).Y_ROI.rightAnodeROI{j,2}),pointsFoundA(:,2)];
-        app.Distances.(selectedValues{i}).PointsY(j+1,4) = {sortrows(pointsCReal,2)};
-        app.Distances.(selectedValues{i}).PointsY(j+1,5) = {sortrows(pointsAReal,2)};
+        app.Distances.(selectedValues{i}).PointsY(j+1,3) = {sortrows(pointsCReal,2)};
+        app.Distances.(selectedValues{i}).PointsY(j+1,4) = {sortrows(pointsAReal,2)};
         %% Loop for Images
         if drawFigures==true && mod(j,stepsForFigures)==0
             fig = figure('visible','off',...
@@ -76,6 +79,9 @@ if Side =="Right"
             title('Full Picture');
             saveas(fig,strcat('D:\Studienarbeit\ProgrammFolder\PointsY\Right\',int2str(i),filesep,int2str(j),'.png'));
         end
+    else
+        app.Distances.(selectedValues{i}).PointsY(j+1,1) = {''};
+        app.Distances.(selectedValues{i}).PointsY(j+1,2) = {''};
     end
 end
 end
