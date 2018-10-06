@@ -1,7 +1,6 @@
-% function [] = ROI_extraction(app)
-function[] = ROI_extractionX()
-app = load('apptest.mat');
-app =app.app;
+ function  ROI_extractionX(app)
+%function[] = ROI_extractionX()
+
 
 selectedValues=app.FolderSelection.InputFolders.Selected_Values;
 pointsFoundN=int64([]);
