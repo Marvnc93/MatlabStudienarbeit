@@ -19,7 +19,7 @@ rOIandUserPoints = {};
 %algorithm = "SURF";
 scoreRange=12;
 minElectrodeDistance =10;
-drawFigures=true;
+drawFigures=false;
 %% LOAD ROI USER POINTS
 for i=1:size(Directory,1)
     file={load(fullfile(pathROI, directories{1,i}))};
@@ -46,13 +46,15 @@ end
 cell ={"preprocessing","preprocessingMode","imageSmoothen","imageSmoothenMode",...
     "imageSharpen","binarize","binarizeMode","structure","structureMode","structureShape","algorithm","algorithmShape"};
 % 2 because first line is text
-%for o=2:size(algorithmCell,1)
-for o=2:2
+for o=2:size(algorithmCell,1)
+%for o=2:2
     if mod(o,5)==0
         o
     end
+    quality = algorithmCell{2,12};
+    minElectrodeDistance= algorithmCell{2,11};
     for i=1:length(rOIandUserPoints)
-        %for i=12:12
+%         for i=1:1
         Img = rOIandUserPoints{i,2};
         OrigImg =Img;
         numPoints = rOIandUserPoints{i,5};
@@ -82,15 +84,15 @@ for o=2:2
         detectedPoints = detectHarrisFeatures(Img,'Filtersize',detectionFilterSize);
         
         %Original Points
-        origPoints = detectedPoints.selectStrongest(15).Location;  
+        origPoints = detectedPoints.selectStrongest(15).Location;
         %Get Force Points
         forcedPoints = GetAllPoints(detectedPoints,numPoints,minElectrodeDistance);
         %Get Quality Points
-        qualityPoints = GetQualityPoints(Img,detectionFilterSize,0.08);
+        qualityPoints = GetQualityPoints(Img,detectionFilterSize,quality);
         %Freq points from the unaltered image
         freqPoints = GetPointsFromFreq(OrigImg,detectedPoints,minElectrodeDistance);
-        %Freq points from the altered image
-        freqPointsAlter = GetPointsFromFreq(Img,detectedPoints,minElectrodeDistance);
+        %         %Freq points from the altered image
+        %         freqPointsAlter = GetPointsFromFreq(Img,detectedPoints,minElectrodeDistance);
         %% Get Score
         rOIandUserPoints{i,6}= CalculateScore(forcedPoints,rOIandUserPoints{i,1},scoreRange);
         rOIandUserPoints{i,7} = CalculateScore(qualityPoints,rOIandUserPoints{i,1},scoreRange);
@@ -103,59 +105,59 @@ for o=2:2
         
         %% Loop for Images
         if drawFigures==true
+            strcat("At image number: ",int2str(i),"/",int2str(length(rOIandUserPoints)))
+%             strcat("At image number: ",int2str(o),"/",int2str(size(algorithmCell,1)))
             fig = figure('visible','off',...
                 'Position',[500 300 1200 400]);
-            
-            
             subplot(1,4,1)
             imshow(Img);
             hold on;
+            for k = 1:numel(rOIandUserPoints{i,1}(:,1))
+                centers=[rOIandUserPoints{i,1}(:,1),rOIandUserPoints{i,1}(:,2)];
+                viscircles(centers,scoreRange*ones(size(centers(:,1))),'Color','g','LineStyle','-','LineWidth',0.1);
+            end
             plot(forcedPoints(:,1),forcedPoints(:,2),'yx','MarkerSize',12,'LineWidth',2);
             title(strcat('#Points Force:',int2str(rOIandUserPoints{i,6})));
             
             subplot(1,4,2)
             imshow(Img);
             hold on;
+            for k = 1:numel(rOIandUserPoints{i,1}(:,1))
+                centers=[rOIandUserPoints{i,1}(:,1),rOIandUserPoints{i,1}(:,2)];
+                viscircles(centers,scoreRange*ones(size(centers(:,1))),'Color','g','LineStyle','-','LineWidth',0.1);
+            end
             plot(qualityPoints(:,1),qualityPoints(:,2),'rx','MarkerSize',12,'LineWidth',2);
             title(strcat('#Points Quality:',int2str(rOIandUserPoints{i,7})));
             
             subplot(1,4,3)
             imshow(Img);
             hold on;
+            for k = 1:numel(rOIandUserPoints{i,1}(:,1))
+                centers=[rOIandUserPoints{i,1}(:,1),rOIandUserPoints{i,1}(:,2)];
+                viscircles(centers,scoreRange*ones(size(centers(:,1))),'Color','g','LineStyle','-','LineWidth',0.1);
+            end
             plot(freqPoints(:,1),freqPoints(:,2),'cx','MarkerSize',12,'LineWidth',2);
             title(strcat('#Points Freq: ',int2str(rOIandUserPoints{i,8})));
-            
             subplot(1,4,4)
             imshow(Img);
             hold on;
-            plot(origPoints(:,1),origPoints(:,2),'cx','MarkerSize',12,'LineWidth',2);
+            for k = 1:numel(rOIandUserPoints{i,1}(:,1))
+                centers=[rOIandUserPoints{i,1}(:,1),rOIandUserPoints{i,1}(:,2)];
+                viscircles(centers,scoreRange*ones(size(centers(:,1))),'Color','g','LineStyle','-','LineWidth',0.1);
+            end
+            plot(origPoints(:,1),origPoints(:,2),'gx','MarkerSize',12,'LineWidth',2);
             title(strcat('#Points Orig: ',int2str(rOIandUserPoints{i,9})));
-            %             %Frequency Points
-            %             hold on;
-            %             plot(freqPoints(:,1),freqPoints(:,2),'rx');
-            %Forced Points
-            
-            % User points marker
-            %hold on;
-            %plot(rOIandUserPoints{i,1}(:,1),rOIandUserPoints{i,1}(:,2),'g+');
-            %User points circles
-            %             for k = 1:numel(rOIandUserPoints{i,1}(:,1))
-            %                 centers=[rOIandUserPoints{i,1}(:,1),rOIandUserPoints{i,1}(:,2)];
-            %                 viscircles(centers,scoreRange*ones(size(centers(:,1))),'Color','g','LineStyle','-','LineWidth',0.1);
-            %             end
-            
-%             title(strcat('Points Found Force:',int2str(rOIandUserPoints{i,6}),...
-%                 ' Freq ',int2str(rOIandUserPoints{i,7})));
             saveas(fig,strcat('D:\Studienarbeit\ProgrammFolder\IAandCD\',int2str(i),'.png'));
+            %saveas(fig,strcat('D:\Studienarbeit\ProgrammFolder\IAandCD\',int2str(o),'.png'));
             close all
         end
     end
-    start = 9;
+    start = 12;
     [xaor,xcor,yaor,ycor]=ProcessScore(rOIandUserPoints,9);
     algorithmCell{o,start+1} = xaor;
     algorithmCell{o,start+2} = xcor;
     algorithmCell{o,start+3} = yaor;
-    algorithmCell{o,start+4} = ycor;    
+    algorithmCell{o,start+4} = ycor;
     [xafo,xcfo,yafo,ycfo]=ProcessScore(rOIandUserPoints,6);
     algorithmCell{o,start+5} = xafo;
     algorithmCell{o,start+6} = xcfo;
@@ -171,9 +173,9 @@ for o=2:2
     algorithmCell{o,start+14} = xcfr;
     algorithmCell{o,start+15} = yafr;
     algorithmCell{o,start+16} = ycfr;
-
-    
-    
+%     
+%     
+%     
 end
 algorithmCell{1,start+20}=0;
 algorithmCell(1,start+1:start+16) = {"xaor","xcor","yaor","ycor","xafo","xcfo","yafo","ycfo","xaqu","xcqu","yaqu","ycqu","xafr","xcfr","yafr","ycfr"};
