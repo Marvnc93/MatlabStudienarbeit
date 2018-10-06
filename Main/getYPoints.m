@@ -1,16 +1,16 @@
-% this should call all function related to X
+function app=getYPoints(app)
 %% Real Part
 % app = load('apptest.mat');
 % app =app.app;
 % ROI_extractionX(app)
 %% Debug
-if exist('app','var') ==0
-    app = load('D:\Studienarbeit\ProgrammFolder\apptest_ROIY.mat');
-    app =app.app;
-end
+% if exist('app','var') ==0
+%     app = load('D:\Studienarbeit\ProgrammFolder\apptest_ROIY.mat');
+%     app =app.app;
+% end
 selectedValues=app.FolderSelection.InputFolders.Selected_Values;
 stepsForFigures =10;
-drawFigures = true;
+drawFigures = false;
 pointsFound = struct;
 Settings=load(strcat(app.FolderSelection.Programm_Path,'\settings.mat'));
 Settings=Settings.Settings;
@@ -24,21 +24,23 @@ Settings=Settings.Settings;
 %% real part
 for i=1:length(selectedValues)
 %        for i=3:3
+i
     app.Distances.(selectedValues{i}).PointsY = {"Left Anode","Left Cathode","Right Cathode","Right Anode"};
     app.Distances.(selectedValues{i}).DistancesY = {"Left raw per Image","Left real per Image","Distances raw per point", "Distances real per point",...
         "Right raw per image","Right real per image","Distances Raw per point", "Distances Real per point"};
+    app.Distances.(selectedValues{i}).ResultsY = {"Left","Right"};
     %% angle needs to be applied in a different fashion for both sides!!!!!!!!
     angle = extractAngle(app.ImageSelection.(selectedValues{i}).Z);
     for j=1:size((app.ImageSelection.(selectedValues{i}).Y_ROI.leftCathodeROI),1)
         Point_extractionY(app,Settings,selectedValues,drawFigures,stepsForFigures,j,i,"Left")
-        %CalcDistance(app,selectedValues,angle,j,i,"Left")
+        CalcDistance(app,selectedValues,angle,j,i,"Left","Y")
     end
-%     for j=1:size((app.ImageSelection.(selectedValues{i}).Y_ROI.rightCathodeROI),1)
-%         Point_extractionY(app,Settings,selectedValues,drawFigures,stepsForFigures,j,i,"Broad")
-%         CalcDistance(app,selectedValues,angle,j,i,"Broad")
-%     end
-%    StatisticDistances(app,selectedValues,drawFigures,stepsForFigures,i,"Left");
-%     StatisticDistances(app,selectedValues,drawFigures,stepsForFigures,i,"Broad");
+    for j=1:size((app.ImageSelection.(selectedValues{i}).Y_ROI.rightCathodeROI),1)
+        Point_extractionY(app,Settings,selectedValues,drawFigures,stepsForFigures,j,i,"Right")
+        CalcDistance(app,selectedValues,angle,j,i,"Right","Y")
+    end
+      StatisticDistancesY(app,selectedValues,drawFigures,stepsForFigures,i,"Left");
+     StatisticDistancesY(app,selectedValues,drawFigures,stepsForFigures,i,"Right");
 end
 
 
