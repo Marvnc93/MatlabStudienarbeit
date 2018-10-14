@@ -19,7 +19,7 @@ rOIandUserPoints = {};
 %algorithm = "SURF";
 scoreRange=12;
 minElectrodeDistance =10;
-drawFigures=false;
+drawFigures=true;
 %% LOAD ROI USER POINTS
 for i=1:size(Directory,1)
     file={load(fullfile(pathROI, directories{1,i}))};
@@ -48,11 +48,9 @@ cell ={"preprocessing","preprocessingMode","imageSmoothen","imageSmoothenMode",.
 % 2 because first line is text
 for o=2:size(algorithmCell,1)
 %for o=2:2
-    if mod(o,5)==0
-        o
-    end
-    quality = algorithmCell{2,12};
-    minElectrodeDistance= algorithmCell{2,11};
+strcat("At ", num2str(o/size(algorithmCell,1)*100)," %")
+    %quality = 0.02;
+    minElectrodeDistance= algorithmCell{o,11};
     for i=1:length(rOIandUserPoints)
 %         for i=1:1
         Img = rOIandUserPoints{i,2};
@@ -88,14 +86,14 @@ for o=2:size(algorithmCell,1)
         %Get Force Points
         forcedPoints = GetAllPoints(detectedPoints,numPoints,minElectrodeDistance);
         %Get Quality Points
-        qualityPoints = GetQualityPoints(Img,detectionFilterSize,quality);
+        %qualityPoints = GetQualityPoints(Img,detectionFilterSize,quality);
         %Freq points from the unaltered image
         freqPoints = GetPointsFromFreq(OrigImg,detectedPoints,minElectrodeDistance);
         %         %Freq points from the altered image
         %         freqPointsAlter = GetPointsFromFreq(Img,detectedPoints,minElectrodeDistance);
         %% Get Score
         rOIandUserPoints{i,6}= CalculateScore(forcedPoints,rOIandUserPoints{i,1},scoreRange);
-        rOIandUserPoints{i,7} = CalculateScore(qualityPoints,rOIandUserPoints{i,1},scoreRange);
+        %rOIandUserPoints{i,7} = CalculateScore(qualityPoints,rOIandUserPoints{i,1},scoreRange);
         rOIandUserPoints{i,8}= CalculateScore(freqPoints,rOIandUserPoints{i,1},scoreRange);
         rOIandUserPoints{i,9}= CalculateScore(origPoints,rOIandUserPoints{i,1},scoreRange);
         %Points found without image augmentation
@@ -116,7 +114,7 @@ for o=2:size(algorithmCell,1)
                 centers=[rOIandUserPoints{i,1}(:,1),rOIandUserPoints{i,1}(:,2)];
                 viscircles(centers,scoreRange*ones(size(centers(:,1))),'Color','g','LineStyle','-','LineWidth',0.1);
             end
-            plot(forcedPoints(:,1),forcedPoints(:,2),'yx','MarkerSize',12,'LineWidth',2);
+            %plot(forcedPoints(:,1),forcedPoints(:,2),'yx','MarkerSize',12,'LineWidth',2);
             title(strcat('#Points Force:',int2str(rOIandUserPoints{i,6})));
             
             subplot(1,4,2)
@@ -126,7 +124,7 @@ for o=2:size(algorithmCell,1)
                 centers=[rOIandUserPoints{i,1}(:,1),rOIandUserPoints{i,1}(:,2)];
                 viscircles(centers,scoreRange*ones(size(centers(:,1))),'Color','g','LineStyle','-','LineWidth',0.1);
             end
-            plot(qualityPoints(:,1),qualityPoints(:,2),'rx','MarkerSize',12,'LineWidth',2);
+            %plot(qualityPoints(:,1),qualityPoints(:,2),'rx','MarkerSize',12,'LineWidth',2);
             title(strcat('#Points Quality:',int2str(rOIandUserPoints{i,7})));
             
             subplot(1,4,3)
@@ -136,7 +134,7 @@ for o=2:size(algorithmCell,1)
                 centers=[rOIandUserPoints{i,1}(:,1),rOIandUserPoints{i,1}(:,2)];
                 viscircles(centers,scoreRange*ones(size(centers(:,1))),'Color','g','LineStyle','-','LineWidth',0.1);
             end
-            plot(freqPoints(:,1),freqPoints(:,2),'cx','MarkerSize',12,'LineWidth',2);
+            plot(freqPoints(:,1),freqPoints(:,2),'cx');%,'MarkerSize',12,'LineWidth',2);
             title(strcat('#Points Freq: ',int2str(rOIandUserPoints{i,8})));
             subplot(1,4,4)
             imshow(Img);
@@ -152,7 +150,7 @@ for o=2:size(algorithmCell,1)
             close all
         end
     end
-    start = 12;
+    start = 11;
     [xaor,xcor,yaor,ycor]=ProcessScore(rOIandUserPoints,9);
     algorithmCell{o,start+1} = xaor;
     algorithmCell{o,start+2} = xcor;
@@ -163,11 +161,11 @@ for o=2:size(algorithmCell,1)
     algorithmCell{o,start+6} = xcfo;
     algorithmCell{o,start+7} = yafo;
     algorithmCell{o,start+8} = ycfo;
-    [xaqu,xcqu,yaqu,ycqu]=ProcessScore(rOIandUserPoints,7);
-    algorithmCell{o,start+9} = xaqu;
-    algorithmCell{o,start+10} = xcqu;
-    algorithmCell{o,start+11} = yaqu;
-    algorithmCell{o,start+12} = ycqu;
+%     [xaqu,xcqu,yaqu,ycqu]=ProcessScore(rOIandUserPoints,7);
+%     algorithmCell{o,start+9} = xaqu;
+%     algorithmCell{o,start+10} = xcqu;
+%     algorithmCell{o,start+11} = yaqu;
+%     algorithmCell{o,start+12} = ycqu;
     [xafr,xcfr,yafr,ycfr]=ProcessScore(rOIandUserPoints,8);
     algorithmCell{o,start+13} = xafr;
     algorithmCell{o,start+14} = xcfr;

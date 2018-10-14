@@ -1,7 +1,7 @@
 function cell = CreateAlgorithmCell()
 
 cell ={"preprocessing","preprocessingMode","imageSmoothen","imageSmoothenMode","GaussFilter","Anisoiter",...
-    "imageSharpen","algorithm","algorithmFilterSize","LaplaceFactor","minDist","quality"};
+    "imageSharpen","algorithm","algorithmFilterSize","LaplaceFactor","minDist"};
 %,"binarize","binarizeMode","structure","structureMode","structureShape"
 counter=2;
 
@@ -19,7 +19,7 @@ GaussFilter = {[7 2],[5 2]};
 Anisoiter = {5};
 
 imageSharpen = {"off","Laplace"};
-LaplaceFactor = {0,0.5,1};
+LaplaceFactor = {0.25,0,5,0.75};
 %Reduced after first run
 %binarize = {"off","on"};
 %binarizeMode={"EarlySobel"};
@@ -37,9 +37,9 @@ algorithmSize = {9};
 %Changed after first run
 %algorithmSize = {5,7,9}; 11 is worse
 
-minDist ={8,10,12};
+minDist ={4,8,10};
 
-quality = {0.2,0.4};
+%quality = {0.2,0.4};
 
 
 for i=1:numel(preprocessing)
@@ -53,14 +53,14 @@ for i=1:numel(preprocessing)
                                 for m2=1:numel(Anisoiter)
                                     for o=1:numel(LaplaceFactor)
                                         for a =1:numel(minDist)
-                                            for b=1:numel(quality)
+                                            %for b=1:numel(quality)
                                                 
                                                 cell(counter,:) = [preprocessing(i),preprocessingMode(j),...
                                                     imageSmoothen(k),imageSmoothenMode(m),GaussFilter(m1),Anisoiter(m2)...
                                                     imageSharpen(n),...
                                                     algorithm(t),algorithmSize(u),...
                                                     LaplaceFactor(o),...
-                                                    minDist(a),quality(b)];
+                                                    minDist(a)];
                                                 counter = counter+1;
                                                 
                                             end
@@ -74,7 +74,7 @@ for i=1:numel(preprocessing)
             end
         end
     end
-end
+
 
 
 

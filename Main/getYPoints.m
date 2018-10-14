@@ -1,13 +1,10 @@
 function app=getYPoints(app)
-%% Real Part
-% app = load('apptest.mat');
-% app =app.app;
-% ROI_extractionX(app)
+
 %% Debug
-% if exist('app','var') ==0
-%     app = load('D:\Studienarbeit\ProgrammFolder\apptest_ROIY.mat');
-%     app =app.app;
-% end
+if exist('app','var') ==0
+    app = load('D:\Studienarbeit\ProgrammFolder\apptest_ROIY.mat');
+    app =app.app;
+end
 selectedValues=app.FolderSelection.InputFolders.Selected_Values;
 stepsForFigures =10;
 drawFigures = false;
@@ -32,10 +29,16 @@ i
     %% angle needs to be applied in a different fashion for both sides!!!!!!!!
     angle = extractAngle(app.ImageSelection.(selectedValues{i}).Z);
     for j=1:size((app.ImageSelection.(selectedValues{i}).Y_ROI.leftCathodeROI),1)
+        if mod(j,10)==0
+            strcat("Left at: ",int2str(j),"/",int2str(size((app.ImageSelection.(selectedValues{i}).Y_ROI.leftCathodeROI),1)))
+        end
         Point_extractionY(app,Settings,selectedValues,drawFigures,stepsForFigures,j,i,"Left")
         CalcDistance(app,selectedValues,angle,j,i,"Left","Y")
     end
     for j=1:size((app.ImageSelection.(selectedValues{i}).Y_ROI.rightCathodeROI),1)
+                if mod(j,10)==0
+            strcat("Right at: ",int2str(j),"/",int2str(size((app.ImageSelection.(selectedValues{i}).Y_ROI.rightCathodeROI),1)))
+        end
         Point_extractionY(app,Settings,selectedValues,drawFigures,stepsForFigures,j,i,"Right")
         CalcDistance(app,selectedValues,angle,j,i,"Right","Y")
     end
