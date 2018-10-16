@@ -5,9 +5,15 @@ load('userdist.mat');
 Dist=Dist.dist;
 selectedValues = fieldnames(Dist);
 %Resulution in 1 px = x µm
-resolution = 1;
-
+resolution = 25;
+global Wenhao
+Wenhao = [299.09,252.61,233.96,239.03,244.70,253.50,262.27,257.62,262.61,265.12,262.28,263.79,258.95,244.61,218.67,274.46,259.54,257.90,257.75,262.32,269.30,264.28,265.92,...
+268.72,266.38,262.42,257.31,247.67,218.67];
+Wenhao = Wenhao.* resolution;
 x = 1:1:29;
+
+
+
 for i=1:length(selectedValues)
     [jsonNX,jsonNY]=drawNarrow(x,i,0,250*resolution,Dist,userdist.X.(selectedValues{i}).narrow.*resolution,userdist.Y.(selectedValues{i}).right .*resolution,resolution);
     [jsonBX,jsonBY]=drawBroad(x,i,0,350*resolution,Dist,userdist.X.(selectedValues{i}).broad.*resolution,userdist.Y.(selectedValues{i}).left .*resolution,resolution);
@@ -35,22 +41,25 @@ end
 % Apply resolution
 DistancesX = DistancesX .*resolution;
 DistancesY = DistancesY .*resolution;
-fig = figure('Position',[10 10 1000 500],...
+%% Figure for Box Plots
+figBox = figure('Position',[10 10 1000 500],...
     'visible','off');
-subplot(1,3,1);
+subplot(1,2,1);
 boxplot(DistancesX,'symbol',' ');
 title("Narrow Side captured in X-Direction");
 ylim([ymin ymax])
 xticks(1:3:29);
 xticklabels([1:3:29]);
-subplot(1,3,2);
+subplot(1,2,2);
 boxplot(DistancesY,'symbol',' ');
 title("Narrow Side captured in Y-Direction");
 ylim([ymin ymax])
 xticks(1:3:29);
 xticklabels([1:3:29]);
-subplot(1,3,3);
-plot(x,median(DistancesX),x,median(DistancesY),x,distX,'g-',x,distY);
+%% Figure for Distances Plots
+figDist = figure('Position',[10 10 1000 500],...
+    'visible','off');
+plot(x,nanmedian(DistancesX),x,nanmedian(DistancesY),x,distX,'g-',x,distY);
 ylim([ymin ymax])
 xticks(1:3:29);
 xticklabels([1:3:29]);
@@ -58,9 +67,11 @@ jsonX = jsonencode(median(DistancesX));
 jsonY = jsonencode(median(DistancesY));
 title("Mean of Both directions");
 legend({'X-Direction','Y-Direction','X-User','Y-User'},'FontSize',12,'FontName','LM ROMAN 12','FontWeight','bold');
-saveas(fig,strcat('D:\Studienarbeit\ProgrammFolder\Final\','Narrow',convertCharsToStrings(selectedValues(i)),'.png'));
+saveas(figBox,strcat('D:\Studienarbeit\ProgrammFolder\Final\','Narrow_',convertCharsToStrings(selectedValues(i)),'_Box.png'));
+saveas(figDist,strcat('D:\Studienarbeit\ProgrammFolder\Final\','Narrow_',convertCharsToStrings(selectedValues(i)),'_Dist.png'));
 end
 function [jsonX,jsonY]=drawBroad(x,i,ymin,ymax,Dist,distX,distY,resolution)
+global Wenhao;
 selectedValues = fieldnames(Dist);
 DistancesX=[];
 DistancesY=[];
@@ -76,28 +87,32 @@ DistancesX = DistancesX .*resolution;
 DistancesY = DistancesY .*resolution;
 jsonX = jsonencode(median(DistancesX));
 jsonY = jsonencode(median(DistancesY));
-fig = figure('Position',[10 10 1000 500],...
+%% Figure Box Plots
+figBox = figure('Position',[10 10 1000 500],...
     'visible','off');
-subplot(1,3,1);
+subplot(1,2,1);
 boxplot(DistancesX,'symbol',' ');
 title("Broad Side captured in X-Direction");
 ylim([ymin ymax])
 xticks(1:3:29);
 xticklabels([1:3:29]);
-subplot(1,3,2);
+subplot(1,2,2);
 boxplot(DistancesY,'symbol',' ');
 title("Broad Side captured in Y-Direction");
 ylim([ymin ymax])
 xticks(1:3:29);
 xticklabels([1:3:29]);
-subplot(1,3,3);
-plot(x,median(DistancesX),x,median(DistancesY),x,distX,'g-',x,distY);
+%% Figure Distance Plots
+figDist = figure('Position',[10 10 1000 500],...
+    'visible','off');
+plot(x,median(DistancesX),x,nanmedian(DistancesY),x,nandistX,'g-',x,distY,x,Wenhao);
 ylim([ymin ymax])
 xticks(1:3:29);
 xticklabels([1:3:29]);
 title("Mean of Both directions");
 legend({'X-Direction','Y-Direction','X-User','Y-User'},'FontSize',12,'FontName','LM ROMAN 12','FontWeight','bold');
-saveas(fig,strcat('D:\Studienarbeit\ProgrammFolder\Final\','Broad',convertCharsToStrings(selectedValues(i)),'.png'));
+saveas(figBox,strcat('D:\Studienarbeit\ProgrammFolder\Final\','Broad_',convertCharsToStrings(selectedValues(i)),'_Box.png'));
+saveas(figDist,strcat('D:\Studienarbeit\ProgrammFolder\Final\','Broad_',convertCharsToStrings(selectedValues(i)),'_Dist.png'));
 end
 
 
