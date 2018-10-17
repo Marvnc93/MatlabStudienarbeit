@@ -30,7 +30,7 @@ for i=1:numel(selectedValues)
 end
 %% Loop over the selected Input Folders and create the Output Folders
 for i=1:numel(selectedValues)
-%for i=2:2
+
     dirPathY = strcat(app.FolderSelection.Output_Path,filesep,selectedValues{i},'\YROIFigures');
     if createFigures==true
         if exist(dirPathY)==0

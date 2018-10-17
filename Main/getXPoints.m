@@ -1,13 +1,13 @@
-%function  getXPoints(app)
+function  getXPoints(app)
 
-% %% Debug
-if exist('app','var') ==0
-    app = load('D:\Studienarbeit\ProgrammFolder\appcomplete.mat');
-    app =app.app;
-end
+% % %% Debug
+% if exist('app','var') ==0
+%     app = load('D:\Studienarbeit\ProgrammFolder\appcomplete.mat');
+%     app =app.app;
+% end
 selectedValues=app.FolderSelection.InputFolders.Selected_Values;
 stepsForFigures =50;
-drawFigures = true;
+drawFigures = false;
 pointsFound = struct;
 Settings=load(strcat(app.FolderSelection.Programm_Path,'\settings.mat'));
 Settings=Settings.Settings;
