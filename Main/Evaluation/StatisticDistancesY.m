@@ -9,18 +9,17 @@ if Side =="Left"
     Minimum=[];
     Maximum=[];
     Amount='';
+    indx=[];
+    yRed=[];
     for m =1:29
         Values = RemoveOutliers(app.Distances.(selectedValues{i}).DistancesY{m+1,3});
-        %Values = Values(1:cutOffIndex,1);
-        smo = smoothdata(Values,'gaussian',20);
-        
-        %Values = Values(1:150,:);
         Amount=int2str(numel(Values));
-        y=[y;double(nanmean(Values))];
-        stder=[stder;std(Values)];
-        Minimum=[Minimum;min(Values)];
-        Maximum=[Maximum;max(Values)];
-        
+        y=[y;double(nanmedian(Values))];
+        smo = smoothdata(Values,'gaussian',20);
+        xp = transpose(1:numel(Values));
+        med = nanmedian(smo);
+        %Gets new index
+        indx = [indx;GetBestImageIndex(xp,smo,med)];
         %% Figure for each Distance
         if drawFigures==true
         figP =figure('visible','off');
@@ -28,21 +27,31 @@ if Side =="Left"
         plot(xp,Values,xp,smo);
         hold on;
         plot([0 numel(Values)],[median(smo) median(smo)]);
-        saveas(figP,strcat('D:\Studienarbeit\ProgrammFolder\Result\Left\',int2str(i),filesep,int2str(m),'.png'));
+        saveas(figP,strcat('D:\Studienarbeit\ProgrammFolder\Result\Left\',selectedValues{i},filesep,int2str(m),'.png'));
         end
     end
+        medindx = median(indx);
+    for m =1:29
+     ValuesReduced = RemoveOutliers(app.Distances.(selectedValues{i}).DistancesY{m+1,3});
+     ValuesReduced = ValuesReduced(medindx-15:medindx+14);
+        yRed=[yRed;double(nanmean(ValuesReduced))];
+    end
     
-Minimum = Minimum-y;
-Maximum = Maximum-y;
-PlotData= [y,Minimum,Maximum];
-PlotData=sortrows(PlotData,1,'descend');
-app.Distances.(selectedValues{i}).ResultsY(2,1) = {PlotData};
+% Minimum = Minimum-yMedian;
+% Maximum = Maximum-yMedian;
+% PlotData= [yMedian,Minimum,Maximum];
+%PlotData=sortrows(PlotData,1,'descend');
+%app.Distances.(selectedValues{i}).ResultsX(2,2) = {PlotData};
+app.Distances.(selectedValues{i}).ResultLeft = y;
+app.Distances.(selectedValues{i}).ResultLeftReduced = yRed; 
 fig = figure('visible','off');
-errorbar(x,PlotData(:,1),PlotData(:,2),PlotData(:,3));
-title(['Right Side ',strrep(selectedValues{i},'_',' '),' used: ',Amount,' Data Points each']);
-saveas(fig,strcat('D:\Studienarbeit\ProgrammFolder\Result\Left\',int2str(i),filesep,'Final.png'));
+%errorbar(x,yMedian(:,1),PlotData(:,2),PlotData(:,3));
+plot(x,y,x,yRed);
+legend({'Full Set','Reduced Set'},'FontSize',12,'FontName','LM ROMAN 12','FontWeight','bold');
+title(['Left Side ',strrep(selectedValues{i},'_',' '),' used: ',Amount,' Data Points each']);
+saveas(fig,strcat('D:\Studienarbeit\ProgrammFolder\Result\Left\',selectedValues{i},filesep,'Final.png'));
 end
-%% 
+%% ==========================================================================================================================
 if Side =="Right"
     x=transpose(1:1:29);
     y=[];
@@ -50,33 +59,46 @@ if Side =="Right"
     Minimum=[];
     Maximum=[];
     Amount='';
+        indx=[];
+    yRed=[];
     %labels={};
     for m =1:29
         Values = RemoveOutliers(app.Distances.(selectedValues{i}).DistancesY{m+1,7});
         smo = smoothdata(Values,'gaussian',20);
         Amount=int2str(numel(Values));
         y=[y;double(nanmean(Values))];
-        stder=[stder;std(Values)];
-        Minimum=[Minimum;min(Values)];
-        Maximum=[Maximum;max(Values)];
+        smo = smoothdata(Values,'gaussian',20);
+        xp = transpose(1:numel(Values));
+        med = nanmedian(smo);
+        %Gets new index
+        indx = [indx;GetBestImageIndex(xp,smo,med)];
         
         %% Figure for each Distance
+                if drawFigures==true
         figP =figure('visible','off');
         xp = transpose(1:numel(Values));
         plot(xp,Values,xp,smo);
         hold on;
         plot([0 numel(Values)],[median(smo) median(smo)]);
-        saveas(figP,strcat('D:\Studienarbeit\ProgrammFolder\Result\Right\',int2str(i),filesep,int2str(m),'.png'));
+        saveas(figP,strcat('D:\Studienarbeit\ProgrammFolder\Result\Right\',selectedValues{i},filesep,int2str(m),'.png'));
+                end
     end
-Minimum = Minimum-y;
-Maximum = Maximum-y;
-PlotData= [y,Minimum,Maximum];
-PlotData=sortrows(PlotData,1,'descend');
-app.Distances.(selectedValues{i}).ResultsY(2,2) = {PlotData};
+
+        medindx = median(indx);
+    for m =1:29
+     ValuesReduced = RemoveOutliers(app.Distances.(selectedValues{i}).DistancesY{m+1,7});
+     ValuesReduced = ValuesReduced(medindx-15:medindx+14);
+        yRed=[yRed;double(nanmean(ValuesReduced))];
+    end
+app.Distances.(selectedValues{i}).ResultRight = y;
+app.Distances.(selectedValues{i}).ResultRightReduced = yRed; 
 fig = figure('visible','off');
-errorbar(x,PlotData(:,1),PlotData(:,2),PlotData(:,3));
+%errorbar(x,yMedian(:,1),PlotData(:,2),PlotData(:,3));
+plot(x,y,x,yRed);
+legend({'Full Set','Reduced Set'},'FontSize',12,'FontName','LM ROMAN 12','FontWeight','bold');
+
 title(['Right Side ',strrep(selectedValues{i},'_',' '),' used: ',Amount,' Data Points each']);
-saveas(fig,strcat('D:\Studienarbeit\ProgrammFolder\Result\Right\',int2str(i),filesep,'Final.png'));
+saveas(fig,strcat('D:\Studienarbeit\ProgrammFolder\Result\Right\',selectedValues{i},filesep,'Final.png'));
 end
     function refinedValues= RemoveOutliers(Input)
         InterQRange = iqr(Input);

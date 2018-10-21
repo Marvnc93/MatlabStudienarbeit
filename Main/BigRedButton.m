@@ -17,6 +17,6 @@ end
 
 getXPoints(app);
 "XPoints finished"
-%getYPoints(app);
+getYPoints(app);
 "YPoints finished"
 "Wait"

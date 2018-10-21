@@ -1,13 +1,13 @@
 function  getXPoints(app)
 
-% % %% Debug
+% %% Debug
 % if exist('app','var') ==0
 %     app = load('D:\Studienarbeit\ProgrammFolder\appcomplete.mat');
 %     app =app.app;
 % end
 selectedValues=app.FolderSelection.InputFolders.Selected_Values;
-stepsForFigures =50;
-drawFigures = false;
+stepsForFigures =500;
+drawFigures = true;
 pointsFound = struct;
 Settings=load(strcat(app.FolderSelection.Programm_Path,'\settings.mat'));
 Settings=Settings.Settings;
@@ -19,8 +19,8 @@ Settings=Settings.Settings;
 % actual_distance_broad_X = distance_broad_X*cos((90+image_acquisition_angle)/180*pi);
 
 %% real part
-%for i=1:length(selectedValues)
-            for i=1:1
+for i=1:length(selectedValues)
+            %for i=1:1
     i
     app.Distances.(selectedValues{i}).PointsX = {"Narrow Cathode","Narrow Anode","Broad Cathode","Broad Anode"};
     app.Distances.(selectedValues{i}).DistancesX = {"Narrow raw per Image","Narrow real per Image","Distances raw per point", "Distances real per point",...

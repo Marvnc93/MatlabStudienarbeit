@@ -1,6 +1,6 @@
 %Dist = app.Distances;
 global Dist;
-Dist = load("dist.mat");
+Dist = load("dist_old.mat");
 load('userdist.mat');
 Dist=Dist.dist;
 selectedValues = fieldnames(Dist);
@@ -14,7 +14,7 @@ x = 1:1:29;
 
 
 
-for i=1:length(selectedValues)
+for i=1:1%length(selectedValues)
     [jsonNX,jsonNY]=drawNarrow(x,i,0,250*resolution,Dist,userdist.X.(selectedValues{i}).narrow.*resolution,userdist.Y.(selectedValues{i}).right .*resolution,resolution);
     [jsonBX,jsonBY]=drawBroad(x,i,0,350*resolution,Dist,userdist.X.(selectedValues{i}).broad.*resolution,userdist.Y.(selectedValues{i}).left .*resolution,resolution);
     JSON = strcat('{"JSONNX":',jsonNX,',"JSONNY":',jsonNY,',"JSONBX":',jsonBX,',"JSONBY":',jsonBY,'}');
@@ -63,8 +63,9 @@ plot(x,nanmedian(DistancesX),x,nanmedian(DistancesY),x,distX,'g-',x,distY);
 ylim([ymin ymax])
 xticks(1:3:29);
 xticklabels([1:3:29]);
-jsonX = jsonencode(median(DistancesX));
-jsonY = jsonencode(median(DistancesY));
+jsonX = jsonencode(nanmedian(DistancesX));
+jsonY = jsonencode(nanmedian(DistancesY));
+narrow = [transpose(nanmedian(DistancesX)),transpose(nanmedian(DistancesY)),distX,distY];
 title("Mean of Both directions");
 legend({'X-Direction','Y-Direction','X-User','Y-User'},'FontSize',12,'FontName','LM ROMAN 12','FontWeight','bold');
 saveas(figBox,strcat('D:\Studienarbeit\ProgrammFolder\Final\','Narrow_',convertCharsToStrings(selectedValues(i)),'_Box.png'));
@@ -87,6 +88,7 @@ DistancesX = DistancesX .*resolution;
 DistancesY = DistancesY .*resolution;
 jsonX = jsonencode(median(DistancesX));
 jsonY = jsonencode(median(DistancesY));
+broad = [transpose(nanmedian(DistancesX)),transpose(nanmedian(DistancesY)),distX,distY];
 %% Figure Box Plots
 figBox = figure('Position',[10 10 1000 500],...
     'visible','off');
@@ -105,7 +107,7 @@ xticklabels([1:3:29]);
 %% Figure Distance Plots
 figDist = figure('Position',[10 10 1000 500],...
     'visible','off');
-plot(x,median(DistancesX),x,nanmedian(DistancesY),x,nandistX,'g-',x,distY,x,Wenhao);
+plot(x,nanmedian(DistancesX),x,nanmedian(DistancesY),x,distX,'g-',x,distY,x,Wenhao);
 ylim([ymin ymax])
 xticks(1:3:29);
 xticklabels([1:3:29]);

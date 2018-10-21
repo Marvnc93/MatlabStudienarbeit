@@ -44,10 +44,10 @@ rate=[];
 for j=1:29
     
 AnodeRectY = [0,0 110,150];
-CathodeRectY = [medianXn(j), medianXb(j),105,145];
-AnodeArea = 110*150;
+CathodeRectY = [medianXb(j), medianXn(j),105,145];
+CathodeArea = 105*145;
 overlappingArea= rectint(AnodeRectY,CathodeRectY);
-overlappingRate = overlappingArea/AnodeArea;
+overlappingRate = overlappingArea/CathodeArea;
 rate = [rate;overlappingRate];
 end
 
